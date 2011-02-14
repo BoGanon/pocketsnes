@@ -44,7 +44,7 @@
 #include "ppu.h"
 #include "cpuexec.h"
 #include "missing.h"
-#include "dma.h"
+#include "../snes9x_include/dma.h"
 #include "apu.h"
 #include "gfx.h"
 #include "sa1.h"

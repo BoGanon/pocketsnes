@@ -3108,7 +3108,7 @@ void RenderScreen (uint8 *Screen, bool8_32 sub, bool8_32 force_no_add, uint8 D)
     }
 }
 
-#include "font.h"
+#include "../snes9x_include/font.h"
 
 void DisplayChar (uint8 *Screen, uint8 c)
 {

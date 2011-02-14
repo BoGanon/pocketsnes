@@ -45,7 +45,7 @@
 #include "cpuexec.h"
 #include "debug.h"
 #include "apu.h"
-#include "dma.h"
+#include "../snes9x_include/dma.h"
 #include "sa1.h"
 #include "cheats.h"
 #include "srtc.h"

@@ -24,9 +24,9 @@ static char mRomName[SAL_MAX_PATH]={""};
 static char mSystemDir[SAL_MAX_PATH]=SNES_SYSTEM_DIR;
 static u32 mLastRate=0;
 
-static s8 mFpsDisplay[16]={""};
-static s8 mVolumeDisplay[16]={""};
-static s8 mQuickStateDisplay[16]={""};
+static char mFpsDisplay[16]={""};
+static char mVolumeDisplay[16]={""};
+static char mQuickStateDisplay[16]={""};
 static u32 mFps=0;
 static u32 mLastTimer=0;
 static u32 mEnterMenu=0;
@@ -72,12 +72,12 @@ bool8 S9xOpenSnapshotFile (const char *fname, bool8 read_only, STREAM *file)
 {
 	if (read_only)
 	{
-		if (*file = OPEN_STREAM(fname,"rb")) 
+		if ((*file = OPEN_STREAM(fname,"rb"))) 
 			return(TRUE);
 	}
 	else
 	{
-		if (*file = OPEN_STREAM(fname,"w+b")) 
+		if ((*file = OPEN_STREAM(fname,"w+b"))) 
 			return(TRUE);
 	}
 
@@ -138,35 +138,39 @@ bool8_32 S9xDeinitUpdate (int Width, int Height, bool8_32)
 		}
 		
 		sal_VideoDrawRect(0,0,8*8,8,SAL_RGB(0,0,0));
-		sal_VideoPrint(0,0,mFpsDisplay,SAL_RGB(31,31,31));
+		sal_VideoPrint(0,0,(s8*)mFpsDisplay,SAL_RGB(31,31,31));
 	}
 
 	if(mVolumeDisplayTimer>0)
 	{
 		sal_VideoDrawRect(100,0,8*8,8,SAL_RGB(0,0,0));
-		sal_VideoPrint(100,0,mVolumeDisplay,SAL_RGB(31,31,31));
+		sal_VideoPrint(100,0,(s8*)mVolumeDisplay,SAL_RGB(31,31,31));
 	}
 
 	if(mQuickStateTimer>0)
 	{
 		sal_VideoDrawRect(200,0,8*8,8,SAL_RGB(0,0,0));
-		sal_VideoPrint(200,0,mQuickStateDisplay,SAL_RGB(31,31,31));
+		sal_VideoPrint(200,0,(s8*)mQuickStateDisplay,SAL_RGB(31,31,31));
 	}
 
 	sal_VideoFlip(0);
+
+	return TRUE;
 }
 
 const char *S9xGetFilename (const char *ex)
 {
-      	char dir [SAL_MAX_PATH];
-      	char fname [SAL_MAX_PATH];
-      	char ext [SAL_MAX_PATH];
 
-	sal_DirectorySplitFilename(Memory.ROMFilename, dir, fname, ext);
-	sal_DirectoryCombine(dir,fname);
-      	strcat (dir, ex);
+	static char dir [SAL_MAX_PATH];
+	char fname [SAL_MAX_PATH];
+	char ext [SAL_MAX_PATH];
 
-      	return (dir);
+	sal_DirectorySplitFilename((s8*)Memory.ROMFilename,(s8*)dir,(s8*)fname,(s8*)ext);
+	sal_DirectoryCombine((s8*)dir,(s8*)fname);
+
+	sal_StringCat((s8*)dir, (s8*)ex);
+
+	return (dir);
 }
 
 static u8 *mTempState=NULL;
@@ -335,18 +339,21 @@ void S9xSaveSRAM (int showWarning)
 {
 	if (CPU.SRAMModified)
 	{
-		if(Memory.SaveSRAM ((s8*)S9xGetFilename (".srm")))
+		if(Memory.SaveSRAM (S9xGetFilename (".srm")))
 		{
+		// Need POSIX compliance
+		#ifndef _EE
 			sync();
+		#endif
 		}
 		else
 		{
-			MenuMessageBox("Saving SRAM...Failed","SRAM Not Saved!","",MENU_MESSAGE_BOX_MODE_PAUSE);
+			MenuMessageBox((s8*)"Saving SRAM...Failed",(s8*)"SRAM Not Saved!",(s8*)"",MENU_MESSAGE_BOX_MODE_PAUSE);
 		}
 	}
 	else if(showWarning)
 	{
-		MenuMessageBox("Saving SRAM...Ignored!","No changes have been made to SRAM","So there is nothing to save!",MENU_MESSAGE_BOX_MODE_MSG);
+		MenuMessageBox((s8*)"Saving SRAM...Ignored!",(s8*)"No changes have been made to SRAM",(s8*)"So there is nothing to save!",MENU_MESSAGE_BOX_MODE_MSG);
 	}
 }
 
@@ -356,7 +363,7 @@ void S9xSaveSRAM (int showWarning)
 
 bool8_32 S9xOpenSoundDevice(int a, unsigned char b, int c)
 {
-
+	return TRUE;
 }
 
 void S9xAutoSaveSRAM (void)
@@ -369,7 +376,7 @@ void S9xAutoSaveSRAM (void)
 
 void S9xLoadSRAM (void)
 {
-	Memory.LoadSRAM ((s8*)S9xGetFilename (".srm"));
+	Memory.LoadSRAM (S9xGetFilename (".srm"));
 }
 
 static
@@ -436,14 +443,14 @@ int RunSound()
 static
 int RunNoSound()
 {
-  	int skip=0, done=0, doneLast=0,aim=0,i;
+	int skip=0, done=0, doneLast=0,aim=0,i;
 	Settings.APUEnabled = 0;
 	Settings.NextAPUEnabled = Settings.APUEnabled;					
 	S9xSetSoundMute (TRUE);
 	sal_TimerInit(60);
 	done=sal_TimerRead()-1;
-  	while(!mEnterMenu) 
-  	{
+	while(!mEnterMenu) 
+	{
 		for (i=0;i<10;i++)
 		{
 			aim=sal_TimerRead();
@@ -491,16 +498,16 @@ int SnesRomLoad()
 	int check;
 	char text[256];
 	FILE *stream=NULL;
-  
-    	MenuMessageBox("Loading Rom...",mRomName,"",MENU_MESSAGE_BOX_MODE_MSG);
+
+	MenuMessageBox((s8*)"Loading Rom...",(s8*)mRomName,(s8*)"",MENU_MESSAGE_BOX_MODE_MSG);
 
 	if (!Memory.LoadROM (mRomName))
 	{
-		MenuMessageBox("Loading Rom...",mRomName,"FAILED!!!!",MENU_MESSAGE_BOX_MODE_PAUSE);
+		MenuMessageBox((s8*)"Loading Rom...",(s8*)mRomName,(s8*)"FAILED!!!!",MENU_MESSAGE_BOX_MODE_PAUSE);
 		return SAL_ERROR;
 	}
 	
-	MenuMessageBox("Loading Rom...OK!",mRomName,"",MENU_MESSAGE_BOX_MODE_MSG);
+	MenuMessageBox((s8*)"Loading Rom...OK!",(s8*)mRomName,(s8*)"",MENU_MESSAGE_BOX_MODE_MSG);
 
 	S9xReset();
 	S9xResetSound(1);
@@ -594,15 +601,15 @@ void _makepath (char *path, const char *, const char *dir,
 	if (dir && *dir)
 	{
 		strcpy (path, dir);
-		strcat (path, "/");
+		sal_StringCat ((s8*)path,(s8*) "/");
 	}
 	else
 	*path = 0;
-	strcat (path, fname);
+	sal_StringCat ((s8*)path,(s8*) fname);
 	if (ext && *ext)
 	{
-		strcat (path, ".");
-		strcat (path, ext);
+		sal_StringCat ((s8*)path, (s8*)".");
+		sal_StringCat ((s8*)path, (s8*)ext);
 	}
 }
 
@@ -669,10 +676,10 @@ int mainEntry(int argc, char* argv[])
 	{
 		//ensure rom name is cleared
 		mRomName[0]=0;
-		sal_DirectoryGetCurrent(mSystemDir,SAL_MAX_PATH);
+		sal_DirectoryGetCurrent((s8*)mSystemDir,SAL_MAX_PATH);
 	}
 
-	MenuInit(mSystemDir,&mMenuOptions);
+	MenuInit((s8*)mSystemDir,&mMenuOptions);
 
 
 	if(SnesInit() == SAL_ERROR)
@@ -684,7 +691,7 @@ int mainEntry(int argc, char* argv[])
 	while(1)
 	{
 		mInMenu=1;
-		event=MenuRun(mRomName);
+		event=MenuRun((s8*)mRomName);
 		mInMenu=0;
 
 		if(event==EVENT_LOAD_ROM)
@@ -693,7 +700,7 @@ int mainEntry(int argc, char* argv[])
 			mTempState=NULL;
 			if(SnesRomLoad() == SAL_ERROR) 
 			{
-				MenuMessageBox("Failed to load rom",mRomName,"Press any button to continue", MENU_MESSAGE_BOX_MODE_PAUSE);
+				MenuMessageBox((s8*)"Failed to load rom",(s8*)mRomName,(s8*)"Press any button to continue", MENU_MESSAGE_BOX_MODE_PAUSE);
 				sal_Reset();
 		    		return 0;
 			}
@@ -747,7 +754,7 @@ int mainEntry(int argc, char* argv[])
 	GFX.SubScreen=NULL;
 
 	sal_Reset();
-  	return 0;
+	return 0;
 }
 
 }

@@ -48,7 +48,7 @@
 #include "gfx.h"
 #include "missing.h"
 #include "apu.h"
-#include "dma.h"
+#include "../snes9x_include/dma.h"
 #include "fxemu.h"
 #include "sa1.h"
 #ifdef THREADCPU

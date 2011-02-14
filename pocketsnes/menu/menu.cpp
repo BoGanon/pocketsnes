@@ -24,16 +24,16 @@ static s32 mMenutileYscroll=0;
 static s32 mTileCounter=0;
 static s32 mQuickSavePresent=0;
 
-static s8 mMenuText[30][MAX_DISPLAY_CHARS];
+static char mMenuText[30][MAX_DISPLAY_CHARS];
 
 static struct SAL_DIRECTORY_ENTRY *mRomList=NULL;
 static s32 mRomCount;
-static s8 mRomDir[SAL_MAX_PATH]={""};
+static char mRomDir[SAL_MAX_PATH]={""};
 
 static struct SAVE_STATE mSaveState[10];  // holds the filenames for the savestate and "inuse" flags
-static s8 mSaveStateName[SAL_MAX_PATH]={""};       // holds the last filename to be scanned for save states
-static s8 mRomName[SAL_MAX_PATH]={""};
-static s8 mSystemDir[SAL_MAX_PATH];
+static char mSaveStateName[SAL_MAX_PATH]={""};       // holds the last filename to be scanned for save states
+static char mRomName[SAL_MAX_PATH]={""};
+static char mSystemDir[SAL_MAX_PATH];
 static struct MENU_OPTIONS *mMenuOptions=NULL;
 static u16 mTempFb[SAL_SCREEN_WIDTH*SAL_SCREEN_HEIGHT];
 
@@ -53,55 +53,55 @@ void DefaultMenuOptions(void)
 
 s32 LoadMenuOptions(s8 *path, s8 *filename, s8 *ext, s8 *optionsmem, s32 maxSize, s32 showMessage)
 {
-	s8 fullFilename[SAL_MAX_PATH];
-	s8 _filename[SAL_MAX_PATH];
-	s8 _ext[SAL_MAX_PATH];
-	s8 _path[SAL_MAX_PATH];
+	char fullFilename[SAL_MAX_PATH];
+	char _filename[SAL_MAX_PATH];
+	char _ext[SAL_MAX_PATH];
+	char _path[SAL_MAX_PATH];
 	s32 size=0;
 
-    	sal_DirectorySplitFilename(filename, _path, _filename, _ext);
+	sal_DirectorySplitFilename((s8*)filename,(s8*)_path,(s8*)_filename,(s8*)_ext);
 	sprintf(fullFilename,"%s%s%s.%s",path,SAL_DIR_SEP,_filename,ext);
-	return sal_FileLoad(fullFilename,(u8*)optionsmem,maxSize,(u32*)&size);
+	return sal_FileLoad((s8*)fullFilename,(u8*)optionsmem,maxSize,(u32*)&size);
 }
 
 s32 SaveMenuOptions(s8 *path, s8 *filename, s8 *ext, s8 *optionsmem, s32 maxSize, s32 showMessage)
 {
-	s8 fullFilename[SAL_MAX_PATH];
-	s8 _filename[SAL_MAX_PATH];
-	s8 _ext[SAL_MAX_PATH];
-	s8 _path[SAL_MAX_PATH];
+	char fullFilename[SAL_MAX_PATH];
+	char _filename[SAL_MAX_PATH];
+	char _ext[SAL_MAX_PATH];
+	char _path[SAL_MAX_PATH];
 	
 	if (showMessage)
 	{
 		PrintTile();
-		PrintTitle("");
-		sal_VideoPrint(8,120,"Saving...",SAL_RGB(31,31,31));
+		PrintTitle((s8*)"");
+		sal_VideoPrint(8,120,(s8*)"Saving...",SAL_RGB(31,31,31));
 		sal_VideoFlip(1);
 	}
 
-	sal_DirectorySplitFilename(filename, _path, _filename, _ext);
+	sal_DirectorySplitFilename((s8*)filename, (s8*)_path, (s8*)_filename, (s8*)_ext);
 	sprintf(fullFilename,"%s%s%s.%s",path,SAL_DIR_SEP,_filename,ext);
-	return sal_FileSave(fullFilename,(u8*)optionsmem,maxSize);
+	return sal_FileSave((s8*)fullFilename,(u8*)optionsmem,maxSize);
 }
 
 s32 DeleteMenuOptions(s8 *path, s8 *filename, s8 *ext, s32 showMessage)
 {
-	s8 fullFilename[SAL_MAX_PATH];
-	s8 _filename[SAL_MAX_PATH];
-	s8 _ext[SAL_MAX_PATH];
-	s8 _path[SAL_MAX_PATH];
+	char fullFilename[SAL_MAX_PATH];
+	char _filename[SAL_MAX_PATH];
+	char _ext[SAL_MAX_PATH];
+	char _path[SAL_MAX_PATH];
 	
 	if (showMessage)
 	{
 		PrintTile();
-		PrintTitle("");
-		sal_VideoPrint(8,120,"Deleting...",SAL_RGB(31,31,31));
+		PrintTitle((s8*)"");
+		sal_VideoPrint(8,120,(s8*)"Deleting...",SAL_RGB(31,31,31));
 		sal_VideoFlip(1);
 	}
 
-	sal_DirectorySplitFilename(filename, _path, _filename, _ext);
+	sal_DirectorySplitFilename((s8*)filename, (s8*)_path, (s8*)_filename, (s8*)_ext);
 	sprintf(fullFilename,"%s%s%s.%s",path,SAL_DIR_SEP,_filename,ext);
-	sal_FileDelete(fullFilename);
+	sal_FileDelete((s8*)fullFilename);
 	return SAL_OK;
 }
 
@@ -113,60 +113,67 @@ void MenuPause()
 
 s32 MenuMessageBox(s8 *message1,s8 *message2,s8 *message3, enum MENU_MESSAGE_BOX_MODE mode)
 {
-  s32 select=0;
-  s32 subaction=-1;
-  u32 keysRepeat=0,keysHeld=0;
-  
-  sal_InputIgnore();
-  while(subaction==-1)
-  {
-     keysHeld=sal_InputPoll();
-	 keysRepeat=sal_InputRepeat();
-     if (keysRepeat&SAL_INPUT_UP) 
-     {
-       select=SAL_OK; // Up
-     }
-     if (keysRepeat&SAL_INPUT_DOWN) 
-     {
-       select=SAL_ERROR; // Down
-     }
-     if ((keysHeld&INP_BUTTON_MENU_SELECT) || (keysHeld&INP_BUTTON_MENU_CANCEL))
-     {
-        subaction=select;
-     }
-     PrintTile();
-     PrintTitle("Message Box");
-     sal_VideoPrint(8,50,message1,SAL_RGB(31,31,31));
-     sal_VideoPrint(8,60,message2,SAL_RGB(31,31,31));
-     sal_VideoPrint(8,70,message3,SAL_RGB(31,31,31));
-     switch(mode)
-     {
-        case MENU_MESSAGE_BOX_MODE_YESNO: // yes no input
-	       if(select==SAL_OK)
-	       {
-			  PrintBar(120-4);
-	          sal_VideoPrint(8,120,"YES",SAL_RGB(0,0,0));
-	          sal_VideoPrint(8,140,"NO",SAL_RGB(31,31,31));
-	       }
-	       else
-	       {
-			  PrintBar(140-4);
-	          sal_VideoPrint(8,120,"YES",SAL_RGB(31,31,31));
-	          sal_VideoPrint(8,140,"NO",SAL_RGB(0,0,0));
-	       }
-	       break;
-	case MENU_MESSAGE_BOX_MODE_PAUSE: 
-			PrintBar(120-4);
-			sal_VideoPrint(8,120,"Press button to continue",SAL_RGB(0,0,0));
-			break;
-	case MENU_MESSAGE_BOX_MODE_MSG:
-			subaction=SAL_OK;
-			break;
-     }
-     sal_VideoFlip(1);
-  }
-  sal_InputIgnore();
-  return(subaction);
+	s32 select=0;
+	s32 subaction=-1;
+	u32 keysRepeat=0,keysHeld=0;
+
+	sal_InputIgnore();
+	while(subaction==-1)
+	{
+		keysHeld=sal_InputPoll();
+		keysRepeat=sal_InputRepeat();
+		if (keysRepeat&SAL_INPUT_UP) 
+		{
+			select=SAL_OK; // Up
+		}
+		if (keysRepeat&SAL_INPUT_DOWN) 
+		{
+			select=SAL_ERROR; // Down
+		}
+		if ((keysHeld&INP_BUTTON_MENU_SELECT) || (keysHeld&INP_BUTTON_MENU_CANCEL))
+		{
+			subaction=select;
+		}
+		PrintTile();
+		PrintTitle((s8*)"Message Box");
+		sal_VideoPrint(8,50,message1,SAL_RGB(31,31,31));
+		sal_VideoPrint(8,60,message2,SAL_RGB(31,31,31));
+		sal_VideoPrint(8,70,message3,SAL_RGB(31,31,31));
+		switch(mode)
+		{
+			case MENU_MESSAGE_BOX_MODE_YESNO: // yes no input
+			{
+				if(select==SAL_OK)
+				{
+					PrintBar(120-4);
+					sal_VideoPrint(8,120,(s8*)"YES",SAL_RGB(0,0,0));
+					sal_VideoPrint(8,140,(s8*)"NO",SAL_RGB(31,31,31));
+				}
+				else
+				{
+					PrintBar(140-4);
+					sal_VideoPrint(8,120,(s8*)"YES",SAL_RGB(31,31,31));
+					sal_VideoPrint(8,140,(s8*)"NO",SAL_RGB(0,0,0));
+				}
+				break;
+			}
+			case MENU_MESSAGE_BOX_MODE_PAUSE:
+			{
+				PrintBar(120-4);
+				sal_VideoPrint(8,120,(s8*)"Press button to continue",SAL_RGB(0,0,0));
+				break;
+			}
+			case MENU_MESSAGE_BOX_MODE_MSG:
+			{
+				subaction=SAL_OK;
+				break;
+			}
+		}
+		sal_VideoFlip(1);
+	}
+
+	sal_InputIgnore();
+	return(subaction);
 }
 
 void PrintTile()
@@ -209,8 +216,8 @@ void DefaultRomListItems()
 {
 	s32 i;
 
-	strcpy(mRomList[ROM_SELECTOR_SAVE_DEFAULT_DIR].displayName,"Save Default Directory");
-	strcpy(mRomList[ROM_SELECTOR_MAIN_MENU].displayName,"Main Menu");
+	strcpy((char*)mRomList[ROM_SELECTOR_SAVE_DEFAULT_DIR].displayName,"Save Default Directory");
+	strcpy((char*)mRomList[ROM_SELECTOR_MAIN_MENU].displayName,"Main Menu");
 	mRomList[ROM_SELECTOR_DEFAULT_FOCUS].displayName[0]=0;
 }
 
@@ -220,18 +227,18 @@ void SwapDirectoryEntry(struct SAL_DIRECTORY_ENTRY *salFrom, struct SAL_DIRECTOR
 	struct SAL_DIRECTORY_ENTRY temp;
 
 	//Copy salFrom to temp entry
-	strcpy(temp.displayName, salFrom->displayName);
-	strcpy(temp.filename, salFrom->filename);
+	strcpy((char*)temp.displayName, (char*)salFrom->displayName);
+	strcpy((char*)temp.filename, (char*)salFrom->filename);
 	temp.type = salFrom->type;
 
 	//Copy salTo to salFrom
-	strcpy(salFrom->displayName, salTo->displayName);
-	strcpy(salFrom->filename,salTo->filename);
+	strcpy((char*)salFrom->displayName, (char*)salTo->displayName);
+	strcpy((char*)salFrom->filename,(char*)salTo->filename);
 	salFrom->type=salTo->type;
 
 	//Copy temp entry to salTo
-	strcpy(salTo->displayName, temp.displayName);
-	strcpy(salTo->filename, temp.filename);
+	strcpy((char*)salTo->displayName, (char*)temp.displayName);
+	strcpy((char*)salTo->filename, (char*)temp.filename);
 	salTo->type=temp.type;
 		
 }
@@ -254,9 +261,9 @@ int FileScan()
 	sal_VideoPrint(8,120,"Scanning Directory...",SAL_RGB(31,31,31));
 	sal_VideoFlip(1);
 #endif
-	if(sal_DirectoryGetItemCount(mRomDir,&itemCount)==SAL_ERROR)
+	if(sal_DirectoryGetItemCount((s8*)mRomDir,&itemCount)==SAL_ERROR)
 	{
-		MenuMessageBox(sal_LastErrorGet(),"","",MENU_MESSAGE_BOX_MODE_PAUSE);
+		MenuMessageBox(sal_LastErrorGet(),(s8*)"",(s8*)"",MENU_MESSAGE_BOX_MODE_PAUSE);
 		itemCount=0;
 	}
 
@@ -267,14 +274,14 @@ int FileScan()
 	//was there enough memory?
 	if(mRomList == NULL)
 	{
-		MenuMessageBox("Could not allocate memory","Too many files","",MENU_MESSAGE_BOX_MODE_PAUSE);
+		MenuMessageBox((s8*)"Could not allocate memory",(s8*)"Too many files",(s8*)"",MENU_MESSAGE_BOX_MODE_PAUSE);
 		//not enough memory - try the minimum
 		mRomList=(SAL_DIRECTORY_ENTRY*)malloc(sizeof(struct SAL_DIRECTORY_ENTRY)*ROM_SELECTOR_ROM_START);
 		mRomCount=ROM_SELECTOR_ROM_START;
 		if (mRomList == NULL)
 		{
 			//still no joy
-			MenuMessageBox("Dude, I'm really broken now","Restart system","never do this again",MENU_MESSAGE_BOX_MODE_PAUSE);
+			MenuMessageBox((s8*)"Dude, I'm really broken now",(s8*)"Restart system",(s8*)"never do this again",MENU_MESSAGE_BOX_MODE_PAUSE);
 			mRomCount = -1;
 			return SAL_ERROR;
 		}
@@ -285,7 +292,7 @@ int FileScan()
 
 	if (itemCount>0)
 	{
-		if (sal_DirectoryOpen(mRomDir, &d)==SAL_OK)
+		if (sal_DirectoryOpen((s8*)mRomDir, &d)==SAL_OK)
 		{
 			//Dir opened, now stream out details
 			x=0;
@@ -305,9 +312,9 @@ int FileScan()
 				{
 					sal_DirectorySplitFilename(mRomList[x+startIndex].filename,path,filename,ext);
 					if(
-						sal_StringCompare(ext,"zip") == 0 ||
-						sal_StringCompare(ext,"smc") == 0 ||
-						sal_StringCompare(ext,"sfc") == 0)
+						sal_StringCompare(ext,(s8*)"zip") == 0 ||
+						sal_StringCompare(ext,(s8*)"smc") == 0 ||
+						sal_StringCompare(ext,(s8*)"sfc") == 0)
 					{
 						fileCount++;
 						x++;
@@ -326,7 +333,7 @@ int FileScan()
 		else
 		{
 			//Failed to open dir - display error
-			MenuMessageBox("Failed to open rom directory","","",MENU_MESSAGE_BOX_MODE_PAUSE);
+			MenuMessageBox((s8*)"Failed to open rom directory",(s8*)"",(s8*)"",MENU_MESSAGE_BOX_MODE_PAUSE);
 			mRomCount=ROM_SELECTOR_DEFAULT_FOCUS;
 		}
 
@@ -392,15 +399,15 @@ int FileScan()
 
 s32 UpdateRomCache()
 {
-	s8 filename[SAL_MAX_PATH];
+	char filename[SAL_MAX_PATH];
 	PrintTile();
-	PrintTitle("CRC Lookup");
-	sal_VideoPrint(8,120,"Saving cache to disk...",SAL_RGB(31,31,31));
+	PrintTitle((s8*)"CRC Lookup");
+	sal_VideoPrint(8,120,(s8*)"Saving cache to disk...",SAL_RGB(31,31,31));
 	sal_VideoFlip(1);
 
 	strcpy(filename,mRomDir);
-	sal_DirectoryCombine(filename,"romcache.dat");
-	sal_FileSave(filename, (u8*)&mRomList[0], sizeof(struct SAL_DIRECTORY_ENTRY)*(mRomCount));
+	sal_DirectoryCombine((s8*)filename,(s8*)"romcache.dat");
+	sal_FileSave((s8*)filename,(u8*)&mRomList[0],sizeof(struct SAL_DIRECTORY_ENTRY)*(mRomCount));
 
 	return SAL_OK;
 }
@@ -480,7 +487,7 @@ s32 FileSelect()
 			switch(focus)
 			{
 				case ROM_SELECTOR_SAVE_DEFAULT_DIR: //Save default directory
-					SaveMenuOptions(mSystemDir, DEFAULT_ROM_DIR_FILENAME, DEFAULT_ROM_DIR_EXT, mRomDir, strlen(mRomDir), 1);
+					SaveMenuOptions((s8*)mSystemDir,(s8*)DEFAULT_ROM_DIR_FILENAME,(s8*)DEFAULT_ROM_DIR_EXT,(s8*)mRomDir,strlen(mRomDir), 1);
 					break;
 
 				case ROM_SELECTOR_MAIN_MENU: //Return to menu
@@ -496,18 +503,18 @@ s32 FileSelect()
 					if (mRomList[focus].type == SAL_FILE_TYPE_DIRECTORY)
 					{
 						//Check for special directory names "." and ".."
-						if (sal_StringCompare(mRomList[focus].filename,".") == 0)
+						if (sal_StringCompare(mRomList[focus].filename,(s8*)".") == 0)
 						{
 							//goto root directory
 
 						}
-						else if (sal_StringCompare(mRomList[focus].filename,"..") == 0)
+						else if (sal_StringCompare(mRomList[focus].filename,(s8*)"..") == 0)
 						{
 							// up a directory
 							//Remove a directory from RomPath and rescan
 							//Code below will never let you go further up than \SD Card\ on the Gizmondo
 							//This is by design.
-							sal_DirectoryGetParent(mRomDir);
+							sal_DirectoryGetParent((s8*)mRomDir);
 							FileScan();
 							focus=ROM_SELECTOR_DEFAULT_FOCUS; // default menu to non menu item
 														// just to stop directory scan being started 
@@ -518,7 +525,7 @@ s32 FileSelect()
 						else
 						{
 							//go to sub directory
-							sal_DirectoryCombine(mRomDir,mRomList[focus].filename);
+							sal_DirectoryCombine((s8*)mRomDir,mRomList[focus].filename);
 							FileScan();
 							focus=ROM_SELECTOR_DEFAULT_FOCUS; // default menu to non menu item
 														// just to stop directory scan being started 
@@ -529,7 +536,7 @@ s32 FileSelect()
 					{
 						// user has selected a rom, so load it
 						strcpy(mRomName, mRomDir);
-						sal_DirectoryCombine(mRomName,mRomList[focus].filename);
+						sal_DirectoryCombine((s8*)mRomName,mRomList[focus].filename);
 						mQuickSavePresent=0;  // reset any quick saves
 						action=1;
 						menuExit=1;
@@ -546,9 +553,9 @@ s32 FileSelect()
 				//delete current rom
 				if (mRomList[focus].type != SAL_FILE_TYPE_DIRECTORY)
 				{
-					sprintf(text,"%s",mRomList[focus].displayName);
+					sprintf((char*)text,"%s",(char*)mRomList[focus].displayName);
 
-					if(MenuMessageBox("Are you sure you want to delete",text,"",MENU_MESSAGE_BOX_MODE_YESNO)==SAL_OK)
+					if(MenuMessageBox((s8*)"Are you sure you want to delete",text,(s8*)"",MENU_MESSAGE_BOX_MODE_YESNO)==SAL_OK)
 					{
 						//deleterom(focus);
 					}
@@ -558,7 +565,7 @@ s32 FileSelect()
 
 		// Draw screen:
 		PrintTile();
-		PrintTitle("Rom Select");
+		PrintTitle((s8*)"Rom Select");
 
 		smooth=smooth*7+(focus<<8); smooth>>=3;
 
@@ -570,12 +577,12 @@ s32 FileSelect()
 		for (i=scanstart;i<scanend;i++)
 		{
 			s32 x=0,y=0;
-      
+
 			y=(i<<4)-(smooth>>4);
 			x=0;
 			y+=112;
 			if (y<=48 || y>=232) continue;
-           
+
 			if (i==focus)
 			{
 				color=SAL_RGB(0,0,0);
@@ -590,7 +597,7 @@ s32 FileSelect()
 			// Draw Directory icon if current entry is a directory
 			if(mRomList[i].type == SAL_FILE_TYPE_DIRECTORY)
 			{
-				sprintf(text,"<%s>",mRomList[i].displayName);
+				sprintf((char*)text,"<%s>",(char*)mRomList[i].displayName);
 				sal_VideoPrint(x,y,text,color);
 			}
 			else
@@ -602,7 +609,7 @@ s32 FileSelect()
 		}
 
 		PrintBar(228-4);
-		sal_VideoPrint(0,228,mRomDir,SAL_RGB(0,0,0));
+		sal_VideoPrint(0,228,(s8*)mRomDir,SAL_RGB(0,0,0));
 
 		sal_VideoFlip(1);
 	}
@@ -616,17 +623,17 @@ s32 FileSelect()
 static void ScanSaveStates(s8 *romname)
 {
 	s32 i=0;
-	s8 savename[SAL_MAX_PATH];
-	s8 filename[SAL_MAX_PATH];
-	s8 ext[SAL_MAX_PATH];
-	s8 path[SAL_MAX_PATH];
+	char savename[SAL_MAX_PATH];
+	char filename[SAL_MAX_PATH];
+	char ext[SAL_MAX_PATH];
+	char path[SAL_MAX_PATH];
 
-	if(!strcmp(romname,mSaveStateName)) return; // is current save state rom so exit
+	if(!strcmp((char*)romname,mSaveStateName)) return; // is current save state rom so exit
 	
-	sal_DirectorySplitFilename(romname,path,filename,ext);
+	sal_DirectorySplitFilename((s8*)romname,(s8*)path,(s8*)filename,(s8*)ext);
 
 	sprintf(savename,"%s.%s",filename,SAVESTATE_EXT);
-  
+
 	for(i=0;i<10;i++)
 	{
 		/*
@@ -635,8 +642,8 @@ static void ScanSaveStates(s8 *romname)
 		save filename has following format
 		shortname(minus file ext) + SV + saveno ( 0 to 9 )
 		*/
-		sprintf(mSaveState[i].filename,"%s%d",savename,i);
-		sprintf(mSaveState[i].fullFilename,"%s%s%s",mSystemDir,SAL_DIR_SEP,mSaveState[i].filename);
+		sprintf((char*)mSaveState[i].filename,"%s%d",(s8*)savename,i);
+		sprintf((char*)mSaveState[i].fullFilename,"%s%s%s",mSystemDir,SAL_DIR_SEP,mSaveState[i].filename);
 		if (sal_FileExists(mSaveState[i].fullFilename)==SAL_TRUE)
 		{
 			// we have a savestate
@@ -648,7 +655,7 @@ static void ScanSaveStates(s8 *romname)
 			mSaveState[i].inUse = 0;
 		}
 	}
-	strcpy(mSaveStateName,romname);  // save the last scanned romname
+	strcpy(mSaveStateName,(char*)romname);  // save the last scanned romname
 }
 
 static u8 *mTempState=NULL;
@@ -673,7 +680,7 @@ void LoadStateFile(s8 *filename)
 {
 	SetSaveStateIoModeFile();
 
-	S9xUnfreezeGame(filename);
+	S9xUnfreezeGame((char*)filename);
 }
 
 static 
@@ -681,7 +688,7 @@ void SaveStateFile(s8 *filename)
 {
 	SetSaveStateIoModeFile();
 
-	S9xFreezeGame(filename);
+	S9xFreezeGame((char*)filename);
 }
 
 static s32 SaveStateSelect(s32 mode)
@@ -699,7 +706,7 @@ static s32 SaveStateSelect(s32 mode)
 		return(0);
 	}
 	SaveStateMem();
-	ScanSaveStates(mRomName);
+	ScanSaveStates((s8*)mRomName);
 	sal_InputIgnore();
 	while (action!=0&&action!=100)
 	{
@@ -717,19 +724,19 @@ static s32 SaveStateSelect(s32 mode)
 		else if((keysHeld&INP_BUTTON_MENU_SELECT)&&(mode==1)&&(action==5)) action=8;  // pre-load mode
 		else if((keysHeld&INP_BUTTON_MENU_SELECT)&&(mode==2)&&(action==5))
 		{
-			if(MenuMessageBox("Are you sure you want to delete","this save?","",MENU_MESSAGE_BOX_MODE_YESNO)==SAL_OK) action=13;  //delete slot with no preview
+			if(MenuMessageBox((s8*)"Are you sure you want to delete",(s8*)"this save?",(s8*)"",MENU_MESSAGE_BOX_MODE_YESNO)==SAL_OK) action=13;  //delete slot with no preview
 		}
 		else if((keysHeld&INP_BUTTON_MENU_PREVIEW_SAVESTATE)&&(action==12)) action=3;  // preview slot mode
 		else if((keysHeld&INP_BUTTON_MENU_SELECT)&&(mode==1)&&(action==12)) action=8;  //load slot with no preview
 		else if((keysHeld&INP_BUTTON_MENU_SELECT)&&(mode==0)&&(action==12)) action=6;  //save slot with no preview
 		else if((keysHeld&INP_BUTTON_MENU_SELECT)&&(mode==2)&&(action==12))
 		{
-			if(MenuMessageBox("Are you sure you want to delete","this save?","",MENU_MESSAGE_BOX_MODE_YESNO)==SAL_OK) action=13;  //delete slot with no preview
+			if(MenuMessageBox((s8*)"Are you sure you want to delete",(s8*)"this save?",(s8*)"",MENU_MESSAGE_BOX_MODE_YESNO)==SAL_OK) action=13;  //delete slot with no preview
 		}
 
 		PrintTile();
-		PrintTitle("Save States");
-		sal_VideoPrint(12,230,"Press UP and DOWN to change save slot",SAL_RGB(31,15,5));
+		PrintTitle((s8*)"Save States");
+		sal_VideoPrint(12,230,(s8*)"Press UP and DOWN to change save slot",SAL_RGB(31,15,5));
       
 		if(saveno==-1) 
 		{
@@ -741,7 +748,7 @@ static s32 SaveStateSelect(s32 mode)
 		else
 		{
 			PrintBar(60-4);
-			sprintf(text,"SLOT %d",saveno);
+			sprintf((char*)text,"SLOT %d",saveno);
 			sal_VideoPrint(136,60,text,SAL_RGB(0,0,0));
 		}
       
@@ -751,46 +758,46 @@ static s32 SaveStateSelect(s32 mode)
 				//sal_VideoPrint(112,145,14,"Checking....",(unsigned short)SAL_RGB(31,31,31));
 				break;
 			case 2:
-				sal_VideoPrint(144,145,"FREE",SAL_RGB(31,31,31));
+				sal_VideoPrint(144,145,(s8*)"FREE",SAL_RGB(31,31,31));
 				break;
 			case 3:
-				sal_VideoPrint(104,145,"Previewing....",SAL_RGB(31,31,31));
+				sal_VideoPrint(104,145,(s8*)"Previewing....",SAL_RGB(31,31,31));
 				break;
 			case 4:
-				sal_VideoPrint(88,145,"Previewing....fail",SAL_RGB(31,31,31));
+				sal_VideoPrint(88,145,(s8*)"Previewing....fail",SAL_RGB(31,31,31));
 				break;
 			case 5: 
 				sal_VideoBitmapScale(0, 0, SNES_WIDTH, SNES_HEIGHT, 320/2, 240/2, 320/2, &mTempFb[0], (u16*)sal_VideoGetBuffer()+(320*85)+(640-SNES_WIDTH)+16);
 
-				if(mode==1) sal_VideoPrint((320-(strlen(MENU_TEXT_LOAD_SAVESTATE)<<3))>>1,210,MENU_TEXT_LOAD_SAVESTATE,SAL_RGB(31,31,31));
-				else if(mode==0) sal_VideoPrint((320-(strlen(MENU_TEXT_OVERWRITE_SAVESTATE)<<3))>>1,210,MENU_TEXT_OVERWRITE_SAVESTATE,SAL_RGB(31,31,31));
-				else if(mode==2) sal_VideoPrint((320-(strlen(MENU_TEXT_DELETE_SAVESTATE)<<3))>>1,210,MENU_TEXT_DELETE_SAVESTATE,SAL_RGB(31,31,31));
+				if(mode==1) sal_VideoPrint((320-(strlen(MENU_TEXT_LOAD_SAVESTATE)<<3))>>1,210,(s8*)MENU_TEXT_LOAD_SAVESTATE,SAL_RGB(31,31,31));
+				else if(mode==0) sal_VideoPrint((320-(strlen(MENU_TEXT_OVERWRITE_SAVESTATE)<<3))>>1,210,(s8*)MENU_TEXT_OVERWRITE_SAVESTATE,SAL_RGB(31,31,31));
+				else if(mode==2) sal_VideoPrint((320-(strlen(MENU_TEXT_DELETE_SAVESTATE)<<3))>>1,210,(s8*)MENU_TEXT_DELETE_SAVESTATE,SAL_RGB(31,31,31));
 				break;
 			case 6:
-				sal_VideoPrint(124,145,"Saving...",SAL_RGB(31,31,31));
+				sal_VideoPrint(124,145,(s8*)"Saving...",SAL_RGB(31,31,31));
 				break;
 			case 7:
-				sal_VideoPrint(124,145,"Saving...Fail!",SAL_RGB(31,31,31));
+				sal_VideoPrint(124,145,(s8*)"Saving...Fail!",SAL_RGB(31,31,31));
 				break;
 			case 8:
-				sal_VideoPrint(116,145,"loading....",SAL_RGB(31,31,31));
+				sal_VideoPrint(116,145,(s8*)"loading....",SAL_RGB(31,31,31));
 				break;
 				case 9:
-				sal_VideoPrint(116,145,"loading....Fail",SAL_RGB(31,31,31));
+				sal_VideoPrint(116,145,(s8*)"loading....Fail",SAL_RGB(31,31,31));
 				break;
 			case 10:	
 				PrintBar(145-4);
-				sal_VideoPrint(104,145,"Return To Menu",SAL_RGB(0,0,0));
+				sal_VideoPrint(104,145,(s8*)"Return To Menu",SAL_RGB(0,0,0));
 				break;
 			case 12:
-				sal_VideoPrint(124,145,"Slot used",SAL_RGB(31,31,31));
-				sal_VideoPrint((320-(strlen(MENU_TEXT_PREVIEW_SAVESTATE)<<3))>>1,165,MENU_TEXT_PREVIEW_SAVESTATE,SAL_RGB(31,31,31));
-				if(mode==1) sal_VideoPrint((320-(strlen(MENU_TEXT_LOAD_SAVESTATE)<<3))>>1,175,MENU_TEXT_LOAD_SAVESTATE,SAL_RGB(31,31,31));
-				else if(mode==0) sal_VideoPrint((320-(strlen(MENU_TEXT_OVERWRITE_SAVESTATE)<<3))>>1,175,MENU_TEXT_OVERWRITE_SAVESTATE,SAL_RGB(31,31,31));
-				else if(mode==2) sal_VideoPrint((320-(strlen(MENU_TEXT_DELETE_SAVESTATE)<<3))>>1,175,MENU_TEXT_DELETE_SAVESTATE,SAL_RGB(31,31,31));
+				sal_VideoPrint(124,145,(s8*)"Slot used",SAL_RGB(31,31,31));
+				sal_VideoPrint((320-(strlen(MENU_TEXT_PREVIEW_SAVESTATE)<<3))>>1,165,(s8*)MENU_TEXT_PREVIEW_SAVESTATE,SAL_RGB(31,31,31));
+				if(mode==1) sal_VideoPrint((320-(strlen(MENU_TEXT_LOAD_SAVESTATE)<<3))>>1,175,(s8*)MENU_TEXT_LOAD_SAVESTATE,SAL_RGB(31,31,31));
+				else if(mode==0) sal_VideoPrint((320-(strlen(MENU_TEXT_OVERWRITE_SAVESTATE)<<3))>>1,175,(s8*)MENU_TEXT_OVERWRITE_SAVESTATE,SAL_RGB(31,31,31));
+				else if(mode==2) sal_VideoPrint((320-(strlen(MENU_TEXT_DELETE_SAVESTATE)<<3))>>1,175,(s8*)MENU_TEXT_DELETE_SAVESTATE,SAL_RGB(31,31,31));
 				break;
 			case 13:
-				sal_VideoPrint(116,145,"Deleting....",SAL_RGB(31,31,31));
+				sal_VideoPrint(116,145,(s8*)"Deleting....",SAL_RGB(31,31,31));
 				break;
 		}
       
@@ -865,28 +872,28 @@ void RenderMenu(s8 *menuName, s32 menuCount, s32 menuSmooth, s32 menufocus)
 	PrintTile();
 	PrintTitle(menuName);
 
-    	for (i=0;i<menuCount;i++)
-    	{
-      		int x=0,y=0;
+	for (i=0;i<menuCount;i++)
+	{
+		int x=0,y=0;
 
-      		y=(i<<4)-(menuSmooth>>4);
+		y=(i<<4)-(menuSmooth>>4);
 		x=8;
-      		y+=112;
+		y+=112;
 
-      		if (y<=48 || y>=232) continue;
-      
-      		if (i==menufocus)
-      		{
-        		color=SAL_RGB(0,0,0);
+		if (y<=48 || y>=232) continue;
+
+		if (i==menufocus)
+		{
+			color=SAL_RGB(0,0,0);
 			PrintBar(y-4);
-      		}
-      		else
-      		{
-        		color=SAL_RGB(31,31,31);
-      		}
+		}
+		else
+		{
+			color=SAL_RGB(31,31,31);
+		}
 
-      		sal_VideoPrint(x,y,mMenuText[i],color);
-    	}
+		sal_VideoPrint(x,y,(s8*)mMenuText[i],color);
+	}
 }
 
 static
@@ -907,7 +914,7 @@ s32 SaveStateMenu(void)
 	{
 		// Draw screen:
 		menuSmooth=menuSmooth*7+(menufocus<<8); menuSmooth>>=3;
-		RenderMenu("Save States", menuCount,menuSmooth,menufocus);
+		RenderMenu((s8*)"Save States", menuCount,menuSmooth,menufocus);
 		sal_VideoFlip(1);
 
 		keysHeld=sal_InputPoll();
@@ -1000,7 +1007,7 @@ void ShowCredits()
 
 		// Draw screen:
 		menuSmooth=menuSmooth*7+(menufocus<<8); menuSmooth>>=3;
-		RenderMenu("Credits", menuCount,menuSmooth,menufocus);
+		RenderMenu((s8*)"Credits", menuCount,menuSmooth,menufocus);
 		sal_VideoFlip(1);
 	}
   	sal_InputIgnore();
@@ -1178,14 +1185,14 @@ void MenuReloadOptions()
 	if(mRomName[0]!=0)
 	{
 		//Load settings for game
-		if (LoadMenuOptions(mSystemDir, mRomName, MENU_OPTIONS_EXT, (s8*)mMenuOptions, sizeof(struct MENU_OPTIONS), 0) == SAL_OK)
+		if (LoadMenuOptions((s8*)mSystemDir, (s8*)mRomName, (s8*)MENU_OPTIONS_EXT, (s8*)mMenuOptions, sizeof(struct MENU_OPTIONS), 0) == SAL_OK)
 		{
 			return;
 		}
 	}
 
 	//Load global settings
-	if(LoadMenuOptions(mSystemDir, MENU_OPTIONS_FILENAME, MENU_OPTIONS_EXT, (s8*)mMenuOptions, sizeof(struct MENU_OPTIONS), 0) == SAL_OK)
+	if(LoadMenuOptions((s8*)mSystemDir, (s8*)MENU_OPTIONS_FILENAME, (s8*)MENU_OPTIONS_EXT, (s8*)mMenuOptions, sizeof(struct MENU_OPTIONS), 0) == SAL_OK)
 	{
 		return;
 	}
@@ -1195,16 +1202,16 @@ void MenuReloadOptions()
 
 void MenuInit(s8 *systemDir, struct MENU_OPTIONS *menuOptions)
 {
-	s8 filename[SAL_MAX_PATH];
+	char filename[SAL_MAX_PATH];
 	u16 *pix;
 	s32 x;
 	
-	strcpy(mSystemDir,systemDir);
+	strcpy(mSystemDir,(char*)systemDir);
 	mMenuOptions=menuOptions;
 
-	if(LoadMenuOptions(mSystemDir, DEFAULT_ROM_DIR_FILENAME, DEFAULT_ROM_DIR_EXT, mRomDir, SAL_MAX_PATH, 0)!=SAL_OK)
+	if(LoadMenuOptions((s8*)mSystemDir, (s8*)DEFAULT_ROM_DIR_FILENAME, (s8*)DEFAULT_ROM_DIR_EXT, (s8*)mRomDir, SAL_MAX_PATH, 0)!=SAL_OK)
 	{
-		strcpy(mRomDir,systemDir);
+		strcpy(mRomDir,(char*)systemDir);
 	}
 
 	pix=&mMenuTile[0];
@@ -1214,25 +1221,25 @@ void MenuInit(s8 *systemDir, struct MENU_OPTIONS *menuOptions)
 	pix=&mHighLightBar[0];
 	for(x=0;x<320*16;x++) *pix++=0xFFFF;
 
-	strcpy(filename,systemDir);
-	sal_DirectoryCombine(filename,"pocketsnes_tile.png");	
+	strcpy(filename,(char*)systemDir);
+	sal_DirectoryCombine((s8*)filename,(s8*)"pocketsnes_tile.png");	
 	if (sal_ImageLoad(filename, &mMenuTile, 64, 64) == SAL_ERROR)
 	{
-		MenuMessageBox("Failed to load image",filename,sal_LastErrorGet(),MENU_MESSAGE_BOX_MODE_PAUSE);
+		MenuMessageBox((s8*)"Failed to load image",(s8*)filename,sal_LastErrorGet(),MENU_MESSAGE_BOX_MODE_PAUSE);
 	}
 	
-	strcpy(filename,systemDir);
-	sal_DirectoryCombine(filename,"pocketsnes_header.png");	
+	strcpy(filename,(char*)systemDir);
+	sal_DirectoryCombine((s8*)filename,(s8*)"pocketsnes_header.png");	
 	if (sal_ImageLoad(filename, &mMenuHeader, 320, 48) == SAL_ERROR)
 	{
-		MenuMessageBox("Failed to load image",filename,sal_LastErrorGet(),MENU_MESSAGE_BOX_MODE_PAUSE);
+		MenuMessageBox((s8*)"Failed to load image",(s8*)filename,sal_LastErrorGet(),MENU_MESSAGE_BOX_MODE_PAUSE);
 	}
 	
-	strcpy(filename,systemDir);
-	sal_DirectoryCombine(filename,"pocketsnes_bar.png");
+	strcpy(filename,(char*)systemDir);
+	sal_DirectoryCombine((s8*)filename,(s8*)"pocketsnes_bar.png");
 	if (sal_ImageLoad(filename, &mHighLightBar, 320, 16) == SAL_ERROR)
 	{
-		MenuMessageBox("Failed to load image",filename,sal_LastErrorGet(),MENU_MESSAGE_BOX_MODE_PAUSE);
+		MenuMessageBox((s8*)"Failed to load image",(s8*)filename,sal_LastErrorGet(),MENU_MESSAGE_BOX_MODE_PAUSE);
 	}
 
 	MenuReloadOptions();
@@ -1254,16 +1261,16 @@ s32 MenuRun(s8 *romName)
 	sal_VideoInit(16,0,60);
 	sal_VideoSetScaling(320,240);
 
-	if(sal_StringCompare(mRomName,romName)!=0)
+	if(sal_StringCompare((s8*)mRomName,romName)!=0)
 	{
 		action=EVENT_LOAD_ROM;
-		strcpy(mRomName,romName);
+		strcpy(mRomName,(char*)romName);
 		return action;
 	}
 
 	if((mMenuOptions->autoSaveSram) && (mRomName[0]!=0))
 	{
-		MenuMessageBox("Saving SRAM...","","",MENU_MESSAGE_BOX_MODE_MSG);
+		MenuMessageBox((s8*)"Saving SRAM...",(s8*)"",(s8*)"",MENU_MESSAGE_BOX_MODE_MSG);
 		S9xSaveSRAM(0);
 	}
 
@@ -1274,7 +1281,7 @@ s32 MenuRun(s8 *romName)
 	{
 		// Draw screen:
 		menuSmooth=menuSmooth*7+(menufocus<<8); menuSmooth>>=3;
-		RenderMenu("Main Menu", menuCount,menuSmooth,menufocus);
+		RenderMenu((s8*)"Main Menu", menuCount,menuSmooth,menufocus);
 		sal_VideoFlip(1);
 
 		keysHeld=sal_InputPoll();
@@ -1412,23 +1419,23 @@ s32 MenuRun(s8 *romName)
 					if (subaction==1)
 					{
 						action=EVENT_LOAD_ROM;
-						strcpy(romName,mRomName);
+						strcpy((char*)romName,mRomName);
 						MenuReloadOptions();
 						menuExit=1;
 					}
 					break;
 				case MENU_LOAD_GLOBAL_SETTINGS:
-					LoadMenuOptions(mSystemDir, MENU_OPTIONS_FILENAME, MENU_OPTIONS_EXT, (char*)mMenuOptions, sizeof(struct MENU_OPTIONS), 1);
+					LoadMenuOptions((s8*)mSystemDir, (s8*)MENU_OPTIONS_FILENAME, (s8*)MENU_OPTIONS_EXT, (s8*)mMenuOptions, sizeof(struct MENU_OPTIONS), 1);
 					MainMenuUpdateTextAll();
 					break;
 				case MENU_SAVE_GLOBAL_SETTINGS:
-					SaveMenuOptions(mSystemDir, MENU_OPTIONS_FILENAME, MENU_OPTIONS_EXT, (char*)mMenuOptions, sizeof(struct MENU_OPTIONS), 1);
+					SaveMenuOptions((s8*)mSystemDir, (s8*)MENU_OPTIONS_FILENAME, (s8*)MENU_OPTIONS_EXT, (s8*)mMenuOptions, sizeof(struct MENU_OPTIONS), 1);
 					break;
 
 				case MENU_LOAD_CURRENT_SETTINGS:
 					if(mRomName[0]!=0)
 					{
-						LoadMenuOptions(mSystemDir, mRomName, MENU_OPTIONS_EXT, (char*)mMenuOptions, sizeof(struct MENU_OPTIONS), 1);
+						LoadMenuOptions((s8*)mSystemDir, (s8*)mRomName, (s8*)MENU_OPTIONS_EXT, (s8*)mMenuOptions, sizeof(struct MENU_OPTIONS), 1);
 
 						MainMenuUpdateTextAll();
 					}
@@ -1436,14 +1443,14 @@ s32 MenuRun(s8 *romName)
 				case MENU_SAVE_CURRENT_SETTINGS:
 					if(mRomName[0]!=0)
 					{
-						SaveMenuOptions(mSystemDir, mRomName, MENU_OPTIONS_EXT, (char*)mMenuOptions, sizeof(struct MENU_OPTIONS), 1);
+						SaveMenuOptions((s8*)mSystemDir, (s8*)mRomName, (s8*)MENU_OPTIONS_EXT, (s8*)mMenuOptions, sizeof(struct MENU_OPTIONS), 1);
 					}
 					break;
 
 				case MENU_DELETE_CURRENT_SETTINGS:
 					if(mRomName[0]!=0)
 					{
-						DeleteMenuOptions(mSystemDir, mRomName, MENU_OPTIONS_EXT, 1);
+						DeleteMenuOptions((s8*)mSystemDir, (s8*)mRomName, (s8*)MENU_OPTIONS_EXT, 1);
 					}
 					break;
 
@@ -1463,7 +1470,7 @@ s32 MenuRun(s8 *romName)
 				case MENU_SAVE_SRAM:
 					if(mRomName[0]!=0)
 					{
-						MenuMessageBox("","","Saving SRAM...",MENU_MESSAGE_BOX_MODE_MSG);
+						MenuMessageBox((s8*)"",(s8*)"",(s8*)"Saving SRAM...",MENU_MESSAGE_BOX_MODE_MSG);
 						S9xSaveSRAM(1);
 					}
 					break;

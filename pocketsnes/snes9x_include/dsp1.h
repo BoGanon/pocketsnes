@@ -42,8 +42,8 @@
 #define _DSP1_H_
 
 // Simple vector and matrix types
-typedef double MATRIX[3][3];
-typedef double VECTOR[3];
+typedef double MATRIX3x3[3][3];
+typedef double VECTOR3[3];
 
 enum AttitudeMatrix { MatrixA, MatrixB, MatrixC };
 
@@ -59,15 +59,15 @@ struct SDSP1 {
     uint16 output [10];
 
     // Attitude matrices
-    MATRIX vMa;
-    MATRIX vMb;
-    MATRIX vMc;
+    MATRIX3x3 vMa;
+    MATRIX3x3 vMb;
+    MATRIX3x3 vMc;
     
     // Matrix and translaton vector for
     // transforming a 3D position into the global coordinate system,
     // from the view space coordinate system.
-    MATRIX vM;
-    VECTOR vT;
+    MATRIX3x3 vM;
+    VECTOR3 vT;
 
     // Focal distance
     double vFov;
@@ -79,9 +79,9 @@ struct SDSP1 {
     double vHorizon;
 
     // Convert a 2D screen coordinate to a 3D ground coordinate in global coordinate system.
-    void ScreenToGround(VECTOR &v, double X2d, double Y2d);
+    void ScreenToGround(VECTOR3 &v, double X2d, double Y2d);
 
-    MATRIX &GetMatrix( AttitudeMatrix Matrix );
+    MATRIX3x3 &GetMatrix( AttitudeMatrix Matrix );
 };
 
 ///////////////// DSP Commands ////////////////////

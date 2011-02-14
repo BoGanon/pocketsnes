@@ -40,7 +40,7 @@ void sal_LastErrorSet(char *msg)
 }
 
 /* alekmaul's scaler taken from mame4all */
-void sal_VideoBitmapScale(int startx, int starty, int viswidth, int visheight, int newwidth, int newheight,int pitch, uint16_t *src, uint16_t *dst) 
+void sal_VideoBitmapScale(int startx, int starty, int viswidth, int visheight, int newwidth, int newheight,int pitch, u16 *src, u16 *dst) 
 {
   unsigned int W,H,ix,iy,x,y;
   x=startx<<16;
@@ -670,6 +670,13 @@ s32 sal_StringCompare(s8 *string1, s8 *string2)
 		i++;
 	}
 
+}
+
+s8 *sal_StringCat(s8 *string1, s8* string2)
+{
+	strcpy(string1+strlen(string1),string2);
+
+	return string1;
 }
 
 void sal_DirectorySplitFilename(s8 *wholeFilename, s8* path, s8 *filename, s8 *ext)

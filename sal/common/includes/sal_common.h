@@ -21,6 +21,7 @@ s32 sal_Init(void);
 s8 *sal_LastErrorGet();
 void sal_LastErrorSet(char *msg);
 s32 sal_StringCompare(s8 *string1, s8 *string2);
+s8* sal_StringCat(s8 *string1, s8 *string2);
 
 u32 sal_VideoInit(u32 bpp, u32 color, u32 refreshRate);
 u32 sal_VideoGetBpp();

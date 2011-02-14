@@ -46,7 +46,7 @@
 #include "cpuexec.h"
 #include "debug.h"
 #include "apu.h"
-#include "dma.h"
+#include "../snes9x_include/dma.h"
 #include "fxemu.h"
 #include "gfx.h"
 #include "soundux.h"
