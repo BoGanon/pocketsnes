@@ -4,7 +4,7 @@
  * (c) Copyright 1996 - 2001 Gary Henderson (gary.henderson@ntlworld.com) and
  *                           Jerremy Koot (jkoot@snes9x.com)
  *
- * Super FX C emulator code 
+ * Super FX C emulator code
  * (c) Copyright 1997 - 1999 Ivar (ivar@snes9x.com) and
  *                           Gary Henderson.
  * Super FX assembler emulator code (c) Copyright 1998 zsKnight and _Demo_.
@@ -49,7 +49,7 @@
 void S9xInitDSP1 ()
 {
     static bool8_32 init = FALSE;
-    
+
     if (!init)
     {
         InitDSP ();
@@ -60,7 +60,7 @@ void S9xInitDSP1 ()
 void S9xResetDSP1 ()
 {
     S9xInitDSP1 ();
-    
+
     DSP1.waiting4command = TRUE;
     DSP1.in_count = 0;
     DSP1.out_count = 0;
@@ -250,12 +250,12 @@ void S9xSetDSP (uint8 byte, uint16 address)
 				DSPOp08 ();
 
 				DSP1.out_count = 2;
-				DSP1.output [0] = (int16) Op08Ll; 
+				DSP1.output [0] = (int16) Op08Ll;
 				DSP1.output [1] = (int16) Op08Lh;
 				break;
 
 			    case 0x18:	// Range
-				
+
 				Op18X = (int16) DSP1.parameters [0];
 				Op18Y = (int16) DSP1.parameters [1];
 				Op18Z = (int16) DSP1.parameters [2];
@@ -349,7 +349,7 @@ void S9xSetDSP (uint8 byte, uint16 address)
 				DSP1.output [1] = Op06V;
 				DSP1.output [2] = Op06S;
 				break;
-			    
+
 			    case 0x0e:	// Target
 				Op0EH = (int16) DSP1.parameters [0];
 				Op0EV = (int16) DSP1.parameters [1];
@@ -488,7 +488,7 @@ void S9xSetDSP (uint8 byte, uint16 address)
 				DSP1.out_count = 1;
 				DSP1.output [0] = (uint16) Op1BS;
 				break;
-				
+
 			    case 0x2b:
 				Op2BX = (int16) DSP1.parameters [0];
 				Op2BY = (int16) DSP1.parameters [1];

@@ -63,27 +63,27 @@ void S9xSetPalette ()
 void S9xExtraUsage ()
 {
 }
-	
+
 void S9xParseArg (char **argv, int &index, int argc)
-{	
+{
 }
 
 bool8 S9xOpenSnapshotFile (const char *fname, bool8 read_only, STREAM *file)
 {
 	if (read_only)
 	{
-		if ((*file = OPEN_STREAM(fname,"rb"))) 
+		if ((*file = OPEN_STREAM(fname,"rb")))
 			return(TRUE);
 	}
 	else
 	{
-		if ((*file = OPEN_STREAM(fname,"w+b"))) 
+		if ((*file = OPEN_STREAM(fname,"w+b")))
 			return(TRUE);
 	}
 
-	return (FALSE);	
+	return (FALSE);
 }
-	
+
 void S9xCloseSnapshotFile (STREAM file)
 {
 	CLOSE_STREAM(file);
@@ -110,7 +110,7 @@ void S9xLoadSDD1Data (void)
 
 }
 
-   
+
 
 bool8_32 S9xInitUpdate ()
 {
@@ -126,7 +126,7 @@ bool8_32 S9xDeinitUpdate (int Width, int Height, bool8_32)
 	if(mInMenu) return TRUE;
 
 	u32 newTimer;
-	if (mMenuOptions.showFps) 
+	if (mMenuOptions.showFps)
 	{
 		mFps++;
 		newTimer=sal_TimerRead();
@@ -136,7 +136,7 @@ bool8_32 S9xDeinitUpdate (int Width, int Height, bool8_32)
 			sprintf(mFpsDisplay,"FPS: %d",mFps);
 			mFps=0;
 		}
-		
+
 		sal_VideoDrawRect(0,0,8*8,8,SAL_RGB(0,0,0));
 		sal_VideoPrint(0,0,(s8*)mFpsDisplay,SAL_RGB(31,31,31));
 	}
@@ -181,7 +181,7 @@ void LoadStateMem()
 	S9xUnfreezeGame("blah");
 }
 
-static 
+static
 void SaveStateMem()
 {
 	SetSaveStateIoModeMemory(&mTempState);
@@ -214,7 +214,7 @@ void HandleQuickStateRequests()
 		mQuickStateTimer = 60;
 	}
 
-	
+
 }
 uint32 S9xReadJoypad (int which1)
 {
@@ -223,14 +223,14 @@ uint32 S9xReadJoypad (int which1)
 	if (which1 != 0) return val;
 
 	u32 joy = sal_InputPoll();
-	
-	if ((joy & SAL_INPUT_SELECT)&&(joy & SAL_INPUT_START))	
+
+	if ((joy & SAL_INPUT_SELECT)&&(joy & SAL_INPUT_START))
 	{
-		mEnterMenu = 1;		
+		mEnterMenu = 1;
 		return val;
 	}
 
-	
+
 	if ((joy & SAL_INPUT_L)&&(joy & SAL_INPUT_R)&&(joy & SAL_INPUT_LEFT))
 	{
 		if (mQuickStateTimer==0)
@@ -283,7 +283,7 @@ uint32 S9xReadJoypad (int which1)
 	if (joy & SAL_INPUT_A) val |= SNES_A_MASK;
 	if (joy & SAL_INPUT_B) val |= SNES_B_MASK;
 	if (joy & SAL_INPUT_X) val |= SNES_X_MASK;
-		
+
 	if (joy & SAL_INPUT_UP) 	val |= SNES_UP_MASK;
 	if (joy & SAL_INPUT_DOWN) 	val |= SNES_DOWN_MASK;
 	if (joy & SAL_INPUT_LEFT) 	val |= SNES_LEFT_MASK;
@@ -382,19 +382,19 @@ void S9xLoadSRAM (void)
 static
 int RunSound()
 {
-  	int skip=0, done=0, doneLast=0,aim=0,i;
+	int skip=0, done=0, doneLast=0,aim=0,i;
 
 	sal_AudioInit(mMenuOptions.soundRate, 16, 1, 60);
 	Settings.APUEnabled = 1;
-	Settings.NextAPUEnabled = Settings.APUEnabled;					
+	Settings.NextAPUEnabled = Settings.APUEnabled;
 	Settings.SoundPlaybackRate=mMenuOptions.soundRate;
 	Settings.SixteenBitSound=true;
 	Settings.Stereo=1;
 	S9xInitSound (mMenuOptions.soundRate,1,sal_AudioGetBufferSize());
 	S9xSetPlaybackRate(mMenuOptions.soundRate);
 	S9xSetSoundMute (FALSE);
-  	while(!mEnterMenu) 
-  	{
+	while(!mEnterMenu)
+	{
 		for (i=0;i<10;i++)
 		{
 			aim=sal_AudioGetPrevBufferIndex();
@@ -421,18 +421,17 @@ int RunSound()
 						IPPU.RenderThisFrame=FALSE;
 					}
 				}
-		
+
 				//Run SNES for one glorious frame
-		    		S9xMainLoop ();
+				S9xMainLoop ();
 				S9xMixSamples((uint8*)sal_AudioGetBuffer(doneLast), sal_AudioGetSampleCount());
 				HandleQuickStateRequests();
-				
 			}
 			if (done==aim) break; // Up to date now
 			if (mEnterMenu) break;
 		}
 		done=aim; // Make sure up to date
-  	}
+	}
 
 	sal_AudioClose();
 	mEnterMenu=0;
@@ -443,13 +442,14 @@ int RunSound()
 static
 int RunNoSound()
 {
-	int skip=0, done=0, doneLast=0,aim=0,i;
+    //int doneLast=0;
+	int skip=0,done=0,aim=0,i;
 	Settings.APUEnabled = 0;
-	Settings.NextAPUEnabled = Settings.APUEnabled;					
+	Settings.NextAPUEnabled = Settings.APUEnabled;
 	S9xSetSoundMute (TRUE);
 	sal_TimerInit(60);
 	done=sal_TimerRead()-1;
-	while(!mEnterMenu) 
+	while(!mEnterMenu)
 	{
 		for (i=0;i<10;i++)
 		{
@@ -476,28 +476,29 @@ int RunNoSound()
 						IPPU.RenderThisFrame=FALSE;
 					}
 				}
-		
+
 				//Run SNES for one glorious frame
-		    		S9xMainLoop ();
+				S9xMainLoop ();
 				HandleQuickStateRequests();
+
 			}
 			if (done==aim) break; // Up to date now
 			if (mEnterMenu) break;
 		}
 		done=aim; // Make sure up to date
-  	}
+	}
 	mEnterMenu=0;
 	return mEnterMenu;
 
 }
 
-static 
+static
 int SnesRomLoad()
 {
-	char filename[SAL_MAX_PATH+1];
-	int check;
-	char text[256];
-	FILE *stream=NULL;
+	//char filename[SAL_MAX_PATH+1];
+	//int check;
+	//char text[256];
+	//FILE *stream=NULL;
 
 	MenuMessageBox((s8*)"Loading Rom...",(s8*)mRomName,(s8*)"",MENU_MESSAGE_BOX_MODE_MSG);
 
@@ -506,7 +507,7 @@ int SnesRomLoad()
 		MenuMessageBox((s8*)"Loading Rom...",(s8*)mRomName,(s8*)"FAILED!!!!",MENU_MESSAGE_BOX_MODE_PAUSE);
 		return SAL_ERROR;
 	}
-	
+
 	MenuMessageBox((s8*)"Loading Rom...OK!",(s8*)mRomName,(s8*)"",MENU_MESSAGE_BOX_MODE_MSG);
 
 	S9xReset();
@@ -539,11 +540,11 @@ int SnesInit()
 	Settings.MultiPlayer5 = FALSE;
 	//	Settings.ControllerOption = SNES_MULTIPLAYER5;
 	Settings.ControllerOption = 0;
-	
+
 	Settings.ForceTransparency = FALSE;
 	Settings.Transparency = FALSE;
 	Settings.SixteenBit = TRUE;
-	
+
 	Settings.SupportHiRes = FALSE;
 	Settings.NetPlay = FALSE;
 	Settings.ServerName [0] = 0;
@@ -553,20 +554,20 @@ int SnesInit()
 	Settings.TurboSkipFrames = 15;
 	Settings.ThreadSound = FALSE;
 	Settings.SoundSync = FALSE;
-	//Settings.NoPatch = true;		
+	//Settings.NoPatch = true;
 
 	GFX.Pitch = 320 * 2;
 	GFX.RealPitch = 320 * 2;
 	GFX.Screen = (uint8 *) sal_VideoGetBuffer();
-	
-	GFX.SubScreen = (uint8 *)malloc(GFX.RealPitch * 480 * 2); 
-	GFX.ZBuffer =  (uint8 *)malloc(GFX.RealPitch * 480 * 2); 
+
+	GFX.SubScreen = (uint8 *)malloc(GFX.RealPitch * 480 * 2);
+	GFX.ZBuffer =  (uint8 *)malloc(GFX.RealPitch * 480 * 2);
 	GFX.SubZBuffer = (uint8 *)malloc(GFX.RealPitch * 480 * 2);
 	GFX.Delta = (GFX.SubScreen - GFX.Screen) >> 1;
 	GFX.PPL = GFX.Pitch >> 1;
 	GFX.PPLx2 = GFX.Pitch;
 	GFX.ZPitch = GFX.Pitch >> 1;
-	
+
 	if (Settings.ForceNoTransparency)
          Settings.Transparency = FALSE;
 
@@ -582,7 +583,7 @@ int SnesInit()
 	}
 
 	//S9xInitSound ();
-	
+
 	//S9xSetRenderPixelFormat (RGB565);
 	S9xSetSoundMute (TRUE);
 
@@ -652,21 +653,21 @@ void _splitpath (const char *path, char *drive, char *dir, char *fname,
 		else
 			strcpy (ext, "");
 	}
-} 
+}
 
 extern "C"
 {
 
 int mainEntry(int argc, char* argv[])
 {
-	int ref = 0;
+	//int ref = 0;
 
 	s32 event=EVENT_NONE;
 
 	sal_Init();
 	sal_VideoInit(16,SAL_RGB(0,0,0),60);
 
-	if (argc >= 2) 
+	if (argc >= 2)
 	{
 		//Record ROM name
  		strcpy(mRomName, argv[1]);
@@ -680,7 +681,6 @@ int mainEntry(int argc, char* argv[])
 	}
 
 	MenuInit((s8*)mSystemDir,&mMenuOptions);
-
 
 	if(SnesInit() == SAL_ERROR)
 	{
@@ -698,7 +698,7 @@ int mainEntry(int argc, char* argv[])
 		{
 			if(mTempState) free(mTempState);
 			mTempState=NULL;
-			if(SnesRomLoad() == SAL_ERROR) 
+			if(SnesRomLoad() == SAL_ERROR)
 			{
 				MenuMessageBox((s8*)"Failed to load rom",(s8*)mRomName,(s8*)"Press any button to continue", MENU_MESSAGE_BOX_MODE_PAUSE);
 				sal_Reset();
@@ -727,21 +727,21 @@ int mainEntry(int argc, char* argv[])
 			else Settings.Transparency = FALSE;
 
 			sal_AudioSetVolume(mMenuOptions.volume,mMenuOptions.volume);
-			sal_CpuSpeedSet(mMenuOptions.cpuSpeed);	
+			sal_CpuSpeedSet(mMenuOptions.cpuSpeed);
 			sal_VideoClear(0);
-			if(mMenuOptions.soundEnabled) 	
+			if(mMenuOptions.soundEnabled)
 				RunSound();
 			else	RunNoSound();
 
 			event=EVENT_NONE;
 		}
 
-		if(event==EVENT_EXIT_APP) break;	
+		if(event==EVENT_EXIT_APP) break;
 	}
 
 	if(mTempState) free(mTempState);
 	mTempState=NULL;
-	
+
 	S9xGraphicsDeinit();
 	S9xDeinitAPU();
 	Memory.Deinit();

@@ -37,13 +37,13 @@ static char mSystemDir[SAL_MAX_PATH];
 static struct MENU_OPTIONS *mMenuOptions=NULL;
 static u16 mTempFb[SAL_SCREEN_WIDTH*SAL_SCREEN_HEIGHT];
 
-									
+
 void DefaultMenuOptions(void)
 {
 	mMenuOptions->frameSkip=0;   //auto
-	mMenuOptions->soundEnabled = 1; 
-	mMenuOptions->volume=25; 
-	mMenuOptions->cpuSpeed=336; 
+	mMenuOptions->soundEnabled = 1;
+	mMenuOptions->volume=25;
+	mMenuOptions->cpuSpeed=336;
 	mMenuOptions->country=0;
 	mMenuOptions->showFps=1;
 	mMenuOptions->soundRate=48000;
@@ -70,7 +70,7 @@ s32 SaveMenuOptions(s8 *path, s8 *filename, s8 *ext, s8 *optionsmem, s32 maxSize
 	char _filename[SAL_MAX_PATH];
 	char _ext[SAL_MAX_PATH];
 	char _path[SAL_MAX_PATH];
-	
+
 	if (showMessage)
 	{
 		PrintTile();
@@ -90,7 +90,7 @@ s32 DeleteMenuOptions(s8 *path, s8 *filename, s8 *ext, s32 showMessage)
 	char _filename[SAL_MAX_PATH];
 	char _ext[SAL_MAX_PATH];
 	char _path[SAL_MAX_PATH];
-	
+
 	if (showMessage)
 	{
 		PrintTile();
@@ -122,11 +122,11 @@ s32 MenuMessageBox(s8 *message1,s8 *message2,s8 *message3, enum MENU_MESSAGE_BOX
 	{
 		keysHeld=sal_InputPoll();
 		keysRepeat=sal_InputRepeat();
-		if (keysRepeat&SAL_INPUT_UP) 
+		if (keysRepeat&SAL_INPUT_UP)
 		{
 			select=SAL_OK; // Up
 		}
-		if (keysRepeat&SAL_INPUT_DOWN) 
+		if (keysRepeat&SAL_INPUT_DOWN)
 		{
 			select=SAL_ERROR; // Down
 		}
@@ -178,7 +178,7 @@ s32 MenuMessageBox(s8 *message1,s8 *message2,s8 *message3, enum MENU_MESSAGE_BOX
 
 void PrintTile()
 {
-	sal_ImageDrawTiled(mMenuTile, MENU_TILE_WIDTH, MENU_TILE_HEIGHT, mMenutileXscroll, mMenutileYscroll, 0, 48);	
+	sal_ImageDrawTiled(mMenuTile, MENU_TILE_WIDTH, MENU_TILE_HEIGHT, mMenutileXscroll, mMenutileYscroll, 0, 48);
 
 	mTileCounter++;
 	if (mTileCounter > 1)
@@ -186,17 +186,17 @@ void PrintTile()
 		mTileCounter=0;
 		mMenutileXscroll++;
 		if(mMenutileXscroll>=MENU_TILE_WIDTH) mMenutileXscroll=0;
-	  
+
 		mMenutileYscroll++;
 		if(mMenutileYscroll>=MENU_TILE_HEIGHT) mMenutileYscroll=0;
-	}  
-	return; 
+	}
+	return;
 }
 
 void PrintTitle(s8 *title)
-{	
-	sal_ImageDraw(mMenuHeader,MENU_HEADER_WIDTH, MENU_HEADER_HEIGHT,0,0);	
-	//sal_VideoPrint(6,38,title,SAL_RGB(0,0,0)); 
+{
+	sal_ImageDraw(mMenuHeader,MENU_HEADER_WIDTH, MENU_HEADER_HEIGHT,0,0);
+	//sal_VideoPrint(6,38,title,SAL_RGB(0,0,0));
 	//sal_VideoPrint(130,38,DRSMS_VERSION,SAL_RGB(0,0,0));
 
 }
@@ -214,7 +214,7 @@ void freeRomLists()
 
 void DefaultRomListItems()
 {
-	s32 i;
+	//s32 i;
 
 	strcpy((char*)mRomList[ROM_SELECTOR_SAVE_DEFAULT_DIR].displayName,"Save Default Directory");
 	strcpy((char*)mRomList[ROM_SELECTOR_MAIN_MENU].displayName,"Main Menu");
@@ -240,14 +240,14 @@ void SwapDirectoryEntry(struct SAL_DIRECTORY_ENTRY *salFrom, struct SAL_DIRECTOR
 	strcpy((char*)salTo->displayName, (char*)temp.displayName);
 	strcpy((char*)salTo->filename, (char*)temp.filename);
 	salTo->type=temp.type;
-		
+
 }
 
 int FileScan()
 {
 	s32 itemCount=0, fileCount=0, dirCount=0;
 	s32 x,a,b,startIndex=ROM_SELECTOR_DEFAULT_FOCUS+1;
-	s8 text[50];
+	//s8 text[50];
 	s8 filename[SAL_MAX_PATH];
 	s8 path[SAL_MAX_PATH];
 	s8 ext[SAL_MAX_PATH];
@@ -299,7 +299,7 @@ int FileScan()
 			while(sal_DirectoryRead(&d, &mRomList[x+startIndex])==SAL_OK)
 			{
 				//Dir entry read
-#if 0	
+#if 0
 				PrintTile();
 				PrintTitle("File Scan");
 				sprintf(text,"Fetched item %d of %d",x, itemCount-1);
@@ -307,7 +307,7 @@ int FileScan()
 				PrintBar(228-4);
 				sal_VideoPrint(0,228,mRomDir,SAL_RGB(0,0,0));
 				sal_VideoFlip(1);
-#endif	
+#endif
 				if (mRomList[x+startIndex].type == SAL_FILE_TYPE_FILE)
 				{
 					sal_DirectorySplitFilename(mRomList[x+startIndex].filename,path,filename,ext);
@@ -325,7 +325,7 @@ int FileScan()
 					dirCount++;
 					x++;
 				}
-				
+
 			}
 			mRomCount=ROM_SELECTOR_ROM_START+dirCount+fileCount;
 			sal_DirectoryClose(&d);
@@ -363,7 +363,7 @@ int FileScan()
 		//Now sort directory entries
 		for(a=startIndex;a<startIndex+dirCount;a++)
 		{
-			lowIndex=a;		
+			lowIndex=a;
 			for(b=a+1;b<startIndex+dirCount;b++)
 			{
 				if (sal_StringCompare(mRomList[b].displayName, mRomList[lowIndex].displayName) < 0)
@@ -379,7 +379,7 @@ int FileScan()
 		//Now sort file entries
 		for(a=startIndex+dirCount;a<mRomCount;a++)
 		{
-			lowIndex=a;		
+			lowIndex=a;
 			for(b=a+1;b<mRomCount;b++)
 			{
 				if (sal_StringCompare(mRomList[b].displayName, mRomList[lowIndex].displayName) < 0)
@@ -423,8 +423,8 @@ s32 FileSelect()
 	s32 menuExit=0;
 	s32 scanstart=0,scanend=0;
 	u32 keysRepeat=0,keysHeld=0;
-	s32 size=0, check=SAL_OK;
-	
+	//s32 size=0, check=SAL_OK;
+
 	FileScan();
 
 	smooth=focus<<8;
@@ -445,21 +445,21 @@ s32 FileSelect()
 		}
 
 		if (keysHeld&INP_BUTTON_MENU_CANCEL) {action=0; menuExit=1;}
-   
+
 		if (keysRepeat&SAL_INPUT_LEFT || keysRepeat&SAL_INPUT_RIGHT)
 		{
-			if (keysRepeat&SAL_INPUT_LEFT) 
+			if (keysRepeat&SAL_INPUT_LEFT)
 			{
 				focus-=12;
 				smooth=(focus<<8)-1;
-			}      
+			}
 			else if (keysRepeat&SAL_INPUT_RIGHT)
 			{
 				focus+=12;
 				smooth=(focus<<8)-1;
 			}
-			
-			if (focus>mRomCount-1) 
+
+			if (focus>mRomCount-1)
 			{
 				focus=mRomCount-1;
 				smooth=(focus<<8)-1;
@@ -471,7 +471,7 @@ s32 FileSelect()
 			}
 		}
 
-		if (focus>mRomCount-1) 
+		if (focus>mRomCount-1)
 		{
 			focus=0;
 			smooth=(focus<<8)-1;
@@ -481,7 +481,7 @@ s32 FileSelect()
 			focus=mRomCount-1;
 			smooth=(focus<<8)-1;
 		}
-		
+
 		if (keysHeld&INP_BUTTON_MENU_SELECT)
 	    	{
 			switch(focus)
@@ -494,10 +494,10 @@ s32 FileSelect()
 					action=0;
 					menuExit=1;
 					break;
-				
+
 				case ROM_SELECTOR_DEFAULT_FOCUS: //blank space - do nothing
 					break;
-					
+
 				default:
 					// normal file or dir selected
 					if (mRomList[focus].type == SAL_FILE_TYPE_DIRECTORY)
@@ -517,7 +517,7 @@ s32 FileSelect()
 							sal_DirectoryGetParent((s8*)mRomDir);
 							FileScan();
 							focus=ROM_SELECTOR_DEFAULT_FOCUS; // default menu to non menu item
-														// just to stop directory scan being started 
+														// just to stop directory scan being started
 							smooth=focus<<8;
 							sal_InputIgnore();
 							break;
@@ -528,7 +528,7 @@ s32 FileSelect()
 							sal_DirectoryCombine((s8*)mRomDir,mRomList[focus].filename);
 							FileScan();
 							focus=ROM_SELECTOR_DEFAULT_FOCUS; // default menu to non menu item
-														// just to stop directory scan being started 
+														// just to stop directory scan being started
 							smooth=focus<<8;
 						}
 					}
@@ -573,7 +573,7 @@ s32 FileSelect()
 		if (scanstart<0) scanstart=0;
 		scanend = focus+15;
 		if (scanend>mRomCount) scanend=mRomCount;
-		
+
 		for (i=scanstart;i<scanend;i++)
 		{
 			s32 x=0,y=0;
@@ -593,7 +593,7 @@ s32 FileSelect()
 				color=SAL_RGB(31,31,31);
 			}
 
-			 
+
 			// Draw Directory icon if current entry is a directory
 			if(mRomList[i].type == SAL_FILE_TYPE_DIRECTORY)
 			{
@@ -605,7 +605,7 @@ s32 FileSelect()
 				sal_VideoPrint(x,y,mRomList[i].displayName,color);
 			}
 
-			
+
 		}
 
 		PrintBar(228-4);
@@ -629,7 +629,7 @@ static void ScanSaveStates(s8 *romname)
 	char path[SAL_MAX_PATH];
 
 	if(!strcmp((char*)romname,mSaveStateName)) return; // is current save state rom so exit
-	
+
 	sal_DirectorySplitFilename((s8*)romname,(s8*)path,(s8*)filename,(s8*)ext);
 
 	sprintf(savename,"%s.%s",filename,SAVESTATE_EXT);
@@ -667,7 +667,7 @@ void LoadStateMem()
 	S9xUnfreezeGame("blah");
 }
 
-static 
+static
 void SaveStateMem()
 {
 	SetSaveStateIoModeMemory(&mTempState);
@@ -683,7 +683,7 @@ void LoadStateFile(s8 *filename)
 	S9xUnfreezeGame((char*)filename);
 }
 
-static 
+static
 void SaveStateFile(s8 *filename)
 {
 	SetSaveStateIoModeFile();
@@ -697,7 +697,7 @@ static s32 SaveStateSelect(s32 mode)
 	s32 action=11;
 	s32 saveno=0;
 	u32 keysRepeat=0,keysHeld=0;
-	u16 *pixTo,*pixFrom;
+	//u16 *pixTo,*pixFrom;
 
 	if(mRomName[0]==0)
 	{
@@ -717,7 +717,7 @@ static s32 SaveStateSelect(s32 mode)
 		if(keysRepeat&SAL_INPUT_DOWN) {saveno++; action=1;}
 		if(saveno<-1) saveno=9;
 		if(saveno>9) saveno=-1;
-	      
+
 		if(keysHeld&INP_BUTTON_MENU_CANCEL) action=0; // exit
 		else if((keysHeld&INP_BUTTON_MENU_SELECT)&&(saveno==-1)) action=0; // exit
 		else if((keysHeld&INP_BUTTON_MENU_SELECT)&&(mode==0)&&((action==2)||(action==5))) action=6;  // pre-save mode
@@ -737,10 +737,10 @@ static s32 SaveStateSelect(s32 mode)
 		PrintTile();
 		PrintTitle((s8*)"Save States");
 		sal_VideoPrint(12,230,(s8*)"Press UP and DOWN to change save slot",SAL_RGB(31,15,5));
-      
-		if(saveno==-1) 
+
+		if(saveno==-1)
 		{
-			if(action!=10&&action!=0) 
+			if(action!=10&&action!=0)
 			{
 				action=10;
 			}
@@ -751,7 +751,7 @@ static s32 SaveStateSelect(s32 mode)
 			sprintf((char*)text,"SLOT %d",saveno);
 			sal_VideoPrint(136,60,text,SAL_RGB(0,0,0));
 		}
-      
+
 		switch(action)
 		{
 			case 1:
@@ -766,7 +766,7 @@ static s32 SaveStateSelect(s32 mode)
 			case 4:
 				sal_VideoPrint(88,145,(s8*)"Previewing....fail",SAL_RGB(31,31,31));
 				break;
-			case 5: 
+			case 5:
 				sal_VideoBitmapScale(0, 0, SNES_WIDTH, SNES_HEIGHT, 320/2, 240/2, 320/2, &mTempFb[0], (u16*)sal_VideoGetBuffer()+(320*85)+(640-SNES_WIDTH)+16);
 
 				if(mode==1) sal_VideoPrint((320-(strlen(MENU_TEXT_LOAD_SAVESTATE)<<3))>>1,210,(s8*)MENU_TEXT_LOAD_SAVESTATE,SAL_RGB(31,31,31));
@@ -785,7 +785,7 @@ static s32 SaveStateSelect(s32 mode)
 				case 9:
 				sal_VideoPrint(116,145,(s8*)"loading....Fail",SAL_RGB(31,31,31));
 				break;
-			case 10:	
+			case 10:
 				PrintBar(145-4);
 				sal_VideoPrint(104,145,(s8*)"Return To Menu",SAL_RGB(0,0,0));
 				break;
@@ -800,17 +800,17 @@ static s32 SaveStateSelect(s32 mode)
 				sal_VideoPrint(116,145,(s8*)"Deleting....",SAL_RGB(31,31,31));
 				break;
 		}
-      
+
 		sal_VideoFlip(1);
-      
+
 		switch(action)
 		{
 			case 1:
-				if(mSaveState[saveno].inUse) 
+				if(mSaveState[saveno].inUse)
 				{
 					action=3;
 				}
-				else 
+				else
 				{
 					action=2;
 				}
@@ -818,7 +818,7 @@ static s32 SaveStateSelect(s32 mode)
 			case 3:
 				LoadStateFile(mSaveState[saveno].fullFilename);
 				Settings.APUEnabled = 0;
-				Settings.NextAPUEnabled = Settings.APUEnabled;					
+				Settings.NextAPUEnabled = Settings.APUEnabled;
 				S9xSetSoundMute (TRUE);
 				GFX.Screen = (uint8 *) &mTempFb[0];
 				IPPU.RenderThisFrame=TRUE;
@@ -866,7 +866,7 @@ static s32 SaveStateSelect(s32 mode)
 static
 void RenderMenu(s8 *menuName, s32 menuCount, s32 menuSmooth, s32 menufocus)
 {
-	
+
 	s32 i=0;
 	u16 color=0;
 	PrintTile();
@@ -923,15 +923,15 @@ s32 SaveStateMenu(void)
 		// Change which rom is focused on:
 		if (keysRepeat&SAL_INPUT_UP) menufocus--; // Up
 		if (keysRepeat&SAL_INPUT_DOWN) menufocus++; // Down
-    
+
 		if (keysHeld&INP_BUTTON_MENU_CANCEL) menuExit=1;
-    
+
 		if (menufocus>menuCount-1)
 		{
 			menufocus=0;
 			menuSmooth=(menufocus<<8)-1;
-		}   
-		else if (menufocus<0) 
+		}
+		else if (menufocus<0)
 		{
 			menufocus=menuCount-1;
 			menuSmooth=(menufocus<<8)-1;
@@ -958,10 +958,10 @@ s32 SaveStateMenu(void)
 				case SAVESTATE_MENU_RETURN:
 					menuExit=1;
 					break;
-			}	
+			}
 		}
-		
-       
+
+
 	}
   sal_InputIgnore();
   return action;
@@ -991,15 +991,15 @@ void ShowCredits()
 		if (keysRepeat&SAL_INPUT_UP) menufocus--; // Up
 		if (keysRepeat&SAL_INPUT_DOWN) menufocus++; // Down
 
-    
+
 		if (keysHeld&INP_BUTTON_MENU_CANCEL) menuExit=1;
-    
+
 		if (menufocus>menuCount-1)
 		{
 			menufocus=0;
 			menuSmooth=(menufocus<<8)-1;
-		}   
-		else if (menufocus<0) 
+		}
+		else if (menufocus<0)
 		{
 			menufocus=menuCount-1;
 			menuSmooth=(menufocus<<8)-1;
@@ -1013,7 +1013,7 @@ void ShowCredits()
   	sal_InputIgnore();
 }
 
-static 
+static
 void MainMenuUpdateText(s32 menu_index)
 {
 	switch(menu_index)
@@ -1073,20 +1073,20 @@ void MainMenuUpdateText(s32 menu_index)
 				break;
 			}
 			break;
-		
-		case MENU_SOUND_RATE:		
+
+		case MENU_SOUND_RATE:
 			sprintf(mMenuText[MENU_SOUND_RATE],"Sound Rate:                 %d",mMenuOptions->soundRate);
 			break;
 
-		case MENU_CPU_SPEED:		
+		case MENU_CPU_SPEED:
 			sprintf(mMenuText[MENU_CPU_SPEED],"Cpu Speed:                  %d",mMenuOptions->cpuSpeed);
 			break;
-		
+
 		case MENU_SOUND_VOL:
 			sprintf(mMenuText[MENU_SOUND_VOL],"Volume:                     %d",mMenuOptions->volume);
 			break;
-		
-		case MENU_FRAMESKIP: 
+
+		case MENU_FRAMESKIP:
 			switch(mMenuOptions->frameSkip)
 			{
 				case 0:
@@ -1119,22 +1119,22 @@ void MainMenuUpdateText(s32 menu_index)
 					break;
 				case 1:
 					strcpy(mMenuText[MENU_FULLSCREEN],"Full Screen Mode:           ON");
-					break;  
+					break;
 			}
 			break;
-			
+
 		case MENU_LOAD_GLOBAL_SETTINGS:
 			strcpy(mMenuText[MENU_LOAD_GLOBAL_SETTINGS],"Load Global Settings");
 			break;
-			
+
 		case MENU_SAVE_GLOBAL_SETTINGS:
 			strcpy(mMenuText[MENU_SAVE_GLOBAL_SETTINGS],"Save Global Settings");
 			break;
-			
+
 		case MENU_LOAD_CURRENT_SETTINGS:
 			strcpy(mMenuText[MENU_LOAD_CURRENT_SETTINGS],"Load Settings For Current Game");
 			break;
-		
+
 		case MENU_SAVE_CURRENT_SETTINGS:
 			strcpy(mMenuText[MENU_SAVE_CURRENT_SETTINGS],"Save Settings For Current Game");
 			break;
@@ -1205,12 +1205,13 @@ void MenuInit(s8 *systemDir, struct MENU_OPTIONS *menuOptions)
 	char filename[SAL_MAX_PATH];
 	u16 *pix;
 	s32 x;
-	
+
 	strcpy(mSystemDir,(char*)systemDir);
 	mMenuOptions=menuOptions;
 
 	if(LoadMenuOptions((s8*)mSystemDir, (s8*)DEFAULT_ROM_DIR_FILENAME, (s8*)DEFAULT_ROM_DIR_EXT, (s8*)mRomDir, SAL_MAX_PATH, 0)!=SAL_OK)
 	{
+		// Start with empty path for topmost directory
 		strcpy(mRomDir,(char*)systemDir);
 	}
 
@@ -1222,19 +1223,19 @@ void MenuInit(s8 *systemDir, struct MENU_OPTIONS *menuOptions)
 	for(x=0;x<320*16;x++) *pix++=0xFFFF;
 
 	strcpy(filename,(char*)systemDir);
-	sal_DirectoryCombine((s8*)filename,(s8*)"pocketsnes_tile.png");	
+	sal_DirectoryCombine((s8*)filename,(s8*)"pocketsnes_tile.png");
 	if (sal_ImageLoad(filename, &mMenuTile, 64, 64) == SAL_ERROR)
 	{
 		MenuMessageBox((s8*)"Failed to load image",(s8*)filename,sal_LastErrorGet(),MENU_MESSAGE_BOX_MODE_PAUSE);
 	}
-	
+
 	strcpy(filename,(char*)systemDir);
-	sal_DirectoryCombine((s8*)filename,(s8*)"pocketsnes_header.png");	
+	sal_DirectoryCombine((s8*)filename,(s8*)"pocketsnes_header.png");
 	if (sal_ImageLoad(filename, &mMenuHeader, 320, 48) == SAL_ERROR)
 	{
 		MenuMessageBox((s8*)"Failed to load image",(s8*)filename,sal_LastErrorGet(),MENU_MESSAGE_BOX_MODE_PAUSE);
 	}
-	
+
 	strcpy(filename,(char*)systemDir);
 	sal_DirectoryCombine((s8*)filename,(s8*)"pocketsnes_bar.png");
 	if (sal_ImageLoad(filename, &mHighLightBar, 320, 16) == SAL_ERROR)
@@ -1289,8 +1290,8 @@ s32 MenuRun(s8 *romName)
 
 		if (keysRepeat&SAL_INPUT_UP) menufocus--; // Up
 		if (keysRepeat&SAL_INPUT_DOWN) menufocus++; // Down
-    
-		if (keysHeld&INP_BUTTON_MENU_CANCEL) 
+
+		if (keysHeld&INP_BUTTON_MENU_CANCEL)
 		{
 			if(mRomName[0]!=0)
 			{
@@ -1298,13 +1299,13 @@ s32 MenuRun(s8 *romName)
 				menuExit=1;
 			}
 		}
-    
+
 		if (menufocus>menuCount-1)
 		{
 			menufocus=0;
 			menuSmooth=(menufocus<<8)-1;
-		}   
-		else if (menufocus<0) 
+		}
+		else if (menufocus<0)
 		{
 			menufocus=menuCount-1;
 			menuSmooth=(menufocus<<8)-1;
@@ -1331,7 +1332,7 @@ s32 MenuRun(s8 *romName)
 					break;
 
 				case MENU_CPU_SPEED:
-					
+
 					if (keysRepeat&SAL_INPUT_RIGHT)
 					{
 						if(keysHeld&INP_BUTTON_MENU_SELECT)
@@ -1341,7 +1342,7 @@ s32 MenuRun(s8 *romName)
 						else
 						{
 							mMenuOptions->cpuSpeed=sal_CpuSpeedNext(mMenuOptions->cpuSpeed);
-						}	
+						}
 					}
 					else
 					{
@@ -1360,7 +1361,7 @@ s32 MenuRun(s8 *romName)
 				case MENU_SOUND_RATE:
 					if (keysRepeat&SAL_INPUT_RIGHT)
 					{
-						mMenuOptions->soundRate=sal_AudioRateNext(mMenuOptions->soundRate);	
+						mMenuOptions->soundRate=sal_AudioRateNext(mMenuOptions->soundRate);
 					}
 					else
 					{
@@ -1498,13 +1499,13 @@ s32 MenuRun(s8 *romName)
 					action=EVENT_EXIT_APP;
 					menuExit=1;
 					break;
-				
-			}	
+
+			}
 		}
 
-		
+
 	}
-	
+
   sal_InputIgnore();
 
   return action;

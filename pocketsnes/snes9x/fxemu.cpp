@@ -4,7 +4,7 @@
  * (c) Copyright 1996 - 2001 Gary Henderson (gary.henderson@ntlworld.com) and
  *                           Jerremy Koot (jkoot@snes9x.com)
  *
- * Super FX C emulator code 
+ * Super FX C emulator code
  * (c) Copyright 1997 - 1999 Ivar (ivar@snes9x.com) and
  *                           Gary Henderson.
  * Super FX assembler emulator code (c) Copyright 1998 zsKnight and _Demo_.
@@ -45,7 +45,10 @@
 #include <stdio.h>
 
 /* The FxChip Emulator's internal variables */
-struct FxRegs_s GSU = {0};
+// Used in C
+//struct FxRegs_s GSU = {0};
+// Used in C++
+struct FxRegs_s GSU = {};
 
 uint32 (**fx_ppfFunctionTable)(uint32, struct FxRegs_s * gsu) = 0;
 void (**fx_ppfPlotTable)(struct FxRegs_s * gsu) = 0;
@@ -131,7 +134,7 @@ static void fx_backupCache()
 		    memcpy(t1,&gsu->pvCache[i<<4],a);
 		    memcpy(&gsu->avCacheBackup[(i<<4)+a],t2,16-a);
 		    memcpy(t2,&gsu->pvCache[(i<<4)+a],16-a);
-		}		
+		}
 	    }
 	    c = USEX16(c+16);
 	    v >>= 1;
@@ -167,7 +170,7 @@ static void fx_restoreCache()
 		    memcpy(&gsu->pvCache[i<<4],t1,a);
 		    memcpy(t2,&gsu->avCacheBackup[(i<<4)+a],16-a);
 		    memcpy(&gsu->pvCache[(i<<4)+a],t2,16-a);
-		}		
+		}
 	    }
 	    c = USEX16(c+16);
 	    v >>= 1;
@@ -214,7 +217,7 @@ static void fx_readRegisterSpace(struct FxRegs_s * gsu)
     gsu->vSign = (gsu->vStatusReg & FLG_S) << 12;
     gsu->vOverflow = (gsu->vStatusReg & FLG_OV) << 16;
     gsu->vCarry = (gsu->vStatusReg & FLG_CY) >> 2;
-    
+
     /* Set bank pointers */
     gsu->pvRamBank = gsu->apvRamBank[gsu->vRamBankReg & 0x3];
     gsu->pvRomBank = gsu->apvRomBank[gsu->vRomBankReg];
@@ -261,7 +264,7 @@ static void fx_readRegisterSpace(struct FxRegs_s * gsu)
 
 void fx_computeScreenPointers (struct FxRegs_s * gsu)
 {
-    if (gsu->vMode != gsu->vPrevMode || 
+    if (gsu->vMode != gsu->vPrevMode ||
 	gsu->vPrevScreenHeight != gsu->vScreenHeight)
     {
 	int i;
@@ -356,7 +359,7 @@ void fx_computeScreenPointers (struct FxRegs_s * gsu)
 		    case 0:
 			for (i = 0; i < 32; i++)
 			{
-			    gsu->apvScreen[i] = gsu->pvScreenBase + 
+			    gsu->apvScreen[i] = gsu->pvScreenBase +
 				((i & 0x10) << 9) + ((i & 0xf) << 8);
 			    gsu->x[i] = ((i & 0x10) << 8) + ((i & 0xf) << 4);
 			}
@@ -364,7 +367,7 @@ void fx_computeScreenPointers (struct FxRegs_s * gsu)
 		    case 1:
 			for (i = 0; i < 32; i++)
 			{
-			    gsu->apvScreen[i] = gsu->pvScreenBase + 
+			    gsu->apvScreen[i] = gsu->pvScreenBase +
 				((i & 0x10) << 10) + ((i & 0xf) << 9);
 			    gsu->x[i] = ((i & 0x10) << 9) + ((i & 0xf) << 5);
 			}
@@ -373,7 +376,7 @@ void fx_computeScreenPointers (struct FxRegs_s * gsu)
 		    case 3:
 			for (i = 0; i < 32; i++)
 			{
-			    gsu->apvScreen[i] = gsu->pvScreenBase + 
+			    gsu->apvScreen[i] = gsu->pvScreenBase +
 				((i & 0x10) << 11) + ((i & 0xf) << 10);
 			    gsu->x[i] = ((i & 0x10) << 10) + ((i & 0xf) << 6);
 			}
@@ -390,7 +393,7 @@ static void fx_writeRegisterSpace(struct FxRegs_s * gsu)
 {
     int i;
     uint8 *p;
-    
+
     p = gsu->pvRegisters;
     for(i=0; i<16; i++)
     {
@@ -407,7 +410,7 @@ static void fx_writeRegisterSpace(struct FxRegs_s * gsu)
     else CF(OV);
     if(gsu->vCarry) SF(CY);
     else CF(CY);
-    
+
     p = gsu->pvRegisters;
     p[GSU_SFR] = (uint8)gsu->vStatusReg;
     p[GSU_SFR+1] = (uint8)(gsu->vStatusReg>>8);
@@ -416,7 +419,7 @@ static void fx_writeRegisterSpace(struct FxRegs_s * gsu)
     p[GSU_RAMBR] = (uint8)gsu->vRamBankReg;
     p[GSU_CBR] = (uint8)gsu->vCacheBaseReg;
     p[GSU_CBR+1] = (uint8)(gsu->vCacheBaseReg>>8);
-    
+
     fx_restoreCache();
 }
 
@@ -430,7 +433,7 @@ void FxReset(struct FxInit_s *psFxInfo)
 	&fx_a_apfFunctionTable[0],
 	&fx_r_apfFunctionTable[0],
 	&fx_ar_apfFunctionTable[0],
-#endif	
+#endif
     };
     static void (**appfPlot[])(struct FxRegs_s * gsu) = {
 	&fx_apfPlotTable[0],
@@ -438,22 +441,22 @@ void FxReset(struct FxInit_s *psFxInfo)
 	&fx_a_apfPlotTable[0],
 	&fx_r_apfPlotTable[0],
 	&fx_ar_apfPlotTable[0],
-#endif	
+#endif
     };
     static void (**appfOpcode[])(struct FxRegs_s * gsu) = {
 	&fx_apfOpcodeTable[0],
-#if 0	
+#if 0
 	&fx_a_apfOpcodeTable[0],
 	&fx_r_apfOpcodeTable[0],
 	&fx_ar_apfOpcodeTable[0],
-#endif	
+#endif
     };
 
     /* Get function pointers for the current emulation mode */
     fx_ppfFunctionTable = appfFunction[psFxInfo->vFlags & 0x3];
     fx_ppfPlotTable = appfPlot[psFxInfo->vFlags & 0x3];
     fx_ppfOpcodeTable = appfOpcode[psFxInfo->vFlags & 0x3];
-    
+
     /* Clear all internal variables */
     memset((uint8*)&GSU,0,sizeof(struct FxRegs_s));
 	struct FxRegs_s * gsu = &GSU;
@@ -472,7 +475,7 @@ void FxReset(struct FxInit_s *psFxInfo)
     /* The GSU can't access more than 2mb (16mbits) */
     if(gsu->nRomBanks > 0x20)
 	gsu->nRomBanks = 0x20;
-    
+
     /* Clear FxChip register space */
     memset(gsu->pvRegisters,0,0x300);
 
@@ -505,7 +508,7 @@ void FxReset(struct FxInit_s *psFxInfo)
 	gsu->apvRamBank[i] = &gsu->pvRam[(i % gsu->nRamBanks) << 16];
 	gsu->apvRomBank[0x70 + i] = gsu->apvRamBank[i];
     }
-    
+
     /* Start with a nop in the pipe */
     gsu->vPipe = 0x01;
 
@@ -520,7 +523,7 @@ static uint8 fx_checkStartAddress(struct FxRegs_s * gsu)
     /* Check if we start inside the cache */
     if(gsu->bCacheActive && R15 >= gsu->vCacheBaseReg && R15 < (gsu->vCacheBaseReg+512))
 	return TRUE;
-   
+
     /*  Check if we're in an unused area */
     if(gsu->vPrgBankReg < 0x40 && R15 < 0x8000)
 	return FALSE;
@@ -536,7 +539,7 @@ static uint8 fx_checkStartAddress(struct FxRegs_s * gsu)
     /* If not, we're in ROM, so check if the RON flag is set */
     if(!(SCMR&(1<<4)))
 	return FALSE;
-    
+
     return TRUE;
 }
 
@@ -608,7 +611,7 @@ int FxStepOver(uint32 nInstructions, struct FxRegs_s * gsu)
 	return 0;
 #endif
     }
-    
+
     if( PIPE >= 0xf0 )
 	gsu->vStepPoint = USEX16(R15+3);
     else if( (PIPE >= 0x05 && PIPE <= 0x0f) || (PIPE >= 0xa0 && PIPE <= 0xaf) )

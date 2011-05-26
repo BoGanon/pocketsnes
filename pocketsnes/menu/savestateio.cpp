@@ -41,12 +41,12 @@ int check_zip(char *filename)
 static char *load_archive(char *filename, int *file_size)
 {
     int size = 0;
-    char *buf = NULL;	
+    char *buf = NULL;
 
     unzFile fd = NULL;
     unz_file_info info;
     int ret = 0;
-         
+
 	/* Attempt to open the archive */
 	fd = unzOpen(filename);
 	if(!fd)
@@ -90,10 +90,10 @@ static char *load_archive(char *filename, int *file_size)
 		unzClose(fd);
 		return NULL;
 	}
-	
+
 	/* Read (decompress) the file */
 	ret = unzReadCurrentFile(fd, buf, info.uncompressed_size);
-	if(ret != info.uncompressed_size)
+	if((unsigned)ret != info.uncompressed_size)
 	{
 		free(buf);
 	    printf("File failed to uncompress fully\r\n");
@@ -127,7 +127,7 @@ static char *load_archive(char *filename, int *file_size)
 }
 
 static int save_archive(char *filename, char *buffer, int size)
-{	
+{
     zipFile fd = NULL;
     int ret = 0;
     fd=zipOpen(filename,0);
@@ -144,12 +144,12 @@ static int save_archive(char *filename, char *buffer, int size)
 			    NULL,
 			    Z_DEFLATED,
 			    Z_BEST_COMPRESSION);
-			    
+
     if(ret != ZIP_OK)
     {
        zipClose(fd,NULL);
        printf("Failed to create file in zip\r\n");
-       return (0);    
+       return (0);
     }
 
     ret=zipWriteInFileInZip(fd,buffer,size);
@@ -175,7 +175,7 @@ static int save_archive(char *filename, char *buffer, int size)
       printf("Failed to close zip\r\n");
       return (0);
     }
-	
+
     return(1);
 }
 
@@ -228,7 +228,7 @@ int state_unc_read(void *p, int l)
 	}
 	else
 	{
-		
+
 		if((mFileMemPos+l)>mFileMemSize)
 		{
 			//Read requested that exceeded memory limits

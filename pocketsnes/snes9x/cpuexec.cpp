@@ -4,7 +4,7 @@
  * (c) Copyright 1996 - 2001 Gary Henderson (gary.henderson@ntlworld.com) and
  *                           Jerremy Koot (jkoot@snes9x.com)
  *
- * Super FX C emulator code 
+ * Super FX C emulator code
  * (c) Copyright 1997 - 1999 Ivar (ivar@snes9x.com) and
  *                           Gary Henderson.
  * Super FX assembler emulator code (c) Copyright 1998 zsKnight and _Demo_.
@@ -51,15 +51,19 @@
 #include "../snes9x_include/dma.h"
 #include "fxemu.h"
 #include "sa1.h"
+
 #ifdef THREADCPU
 void S9xMainLoop (struct SRegisters * reg, struct SICPU * icpu, struct SCPUState * cpu)
 {
 #else
 void S9xMainLoop (void)
 {
+#if 0
+    // doesn't seem to be used
 	struct SICPU		* icpu  = &ICPU;
 	struct SCPUState	* cpu	= &CPU;
 	struct SRegisters	* reg	= &Registers;
+#endif
 #endif
     for (;;)
     {
@@ -147,7 +151,7 @@ void S9xMainLoop (void)
 		CPU.Cycles += ICPU.Speed [*CPU.PC];
 #endif
 		(*ICPU.S9xOpcodes [*CPU.PC++].S9xOpcode) (&Registers, &ICPU, &CPU);
-	
+
 		if (SA1.Executing)
 			S9xSA1MainLoop ();
 		DO_HBLANK_CHECK();
@@ -180,7 +184,7 @@ void S9xSetIRQ (uint32 source)
     CPU.IRQCycleCount = 3;
     if (CPU.WaitingForInterrupt)
     {
-		// Force IRQ to trigger immediately after WAI - 
+		// Force IRQ to trigger immediately after WAI -
 		// Final Fantasy Mystic Quest crashes without this.
 		CPU.IRQCycleCount = 0;
 		CPU.WaitingForInterrupt = FALSE;
@@ -302,10 +306,10 @@ void S9xDoHBlankProcessing ()
 			{
 				IAPU.RAM [0xff] = (IAPU.RAM [0xff] + 1) & 0xf;
 				APU.Timer [2] -= APU.TimerTarget [2];
-#ifdef SPC700_SHUTDOWN		
+#ifdef SPC700_SHUTDOWN
 				IAPU.WaitCounter++;
 				IAPU.APUExecuting = TRUE;
-#endif		
+#endif
 			}
 	    }
 	    if (CPU.V_Counter & 1)
@@ -317,10 +321,10 @@ void S9xDoHBlankProcessing ()
 				{
 					IAPU.RAM [0xfd] = (IAPU.RAM [0xfd] + 1) & 0xf;
 					APU.Timer [0] = 0;
-#ifdef SPC700_SHUTDOWN		
+#ifdef SPC700_SHUTDOWN
 					IAPU.WaitCounter++;
 					IAPU.APUExecuting = TRUE;
-#endif		    
+#endif
 			    }
 			}
 			if (APU.TimerEnabled [1])
@@ -330,10 +334,10 @@ void S9xDoHBlankProcessing ()
 				{
 					IAPU.RAM [0xfe] = (IAPU.RAM [0xfe] + 1) & 0xf;
 					APU.Timer [1] = 0;
-#ifdef SPC700_SHUTDOWN		
+#ifdef SPC700_SHUTDOWN
 					IAPU.WaitCounter++;
 					IAPU.APUExecuting = TRUE;
-#endif		    
+#endif
 			    }
 			}
 	    }

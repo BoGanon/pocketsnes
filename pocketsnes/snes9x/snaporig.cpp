@@ -4,7 +4,7 @@
  * (c) Copyright 1996 - 2001 Gary Henderson (gary.henderson@ntlworld.com) and
  *                           Jerremy Koot (jkoot@snes9x.com)
  *
- * Super FX C emulator code 
+ * Super FX C emulator code
  * (c) Copyright 1997 - 1999 Ivar (ivar@snes9x.com) and
  *                           Gary Henderson.
  * Super FX assembler emulator code (c) Copyright 1998 zsKnight and _Demo_.
@@ -95,7 +95,7 @@ static int ReadBlock (const char *key, void *block, int max_len, STREAM snap)
     char buffer [20];
     int len = 0;
     int rem = 0;
-    
+
     if (READ_STREAM (buffer, 11, snap) != 11 ||
 	strncmp (buffer, key, 4) != 0 ||
 	(len = atoi (&buffer [4])) == 0)
@@ -106,7 +106,7 @@ static int ReadBlock (const char *key, void *block, int max_len, STREAM snap)
 	rem = len - max_len;
 	len = max_len;
     }
-    if (READ_STREAM (block, len, snap) != len)
+    if ((signed)READ_STREAM (block, len, snap) != len)
 	return (WRONG_FORMAT);
 
     if (rem)
@@ -115,7 +115,7 @@ static int ReadBlock (const char *key, void *block, int max_len, STREAM snap)
 	READ_STREAM (junk, rem, snap);
 	delete junk;
     }
-	
+
     return (SUCCESS);
 }
 
@@ -129,7 +129,7 @@ static int ReadOrigSnapshot (STREAM snap)
 
     int version;
     int len = strlen (ORIG_SNAPSHOT_MAGIC) + 1 + 4 + 1;
-    if (READ_STREAM (buffer, len, snap) != len)
+    if ((signed)READ_STREAM (buffer, len, snap) != len)
 	return (WRONG_FORMAT);
     if (strncmp (buffer, ORIG_SNAPSHOT_MAGIC, strlen (ORIG_SNAPSHOT_MAGIC)) != 0)
 	return (WRONG_FORMAT);
@@ -339,7 +339,7 @@ static int ReadOrigSnapshot (STREAM snap)
 	SoundData.master_volume_left = OrigSoundData.master_volume_left;
 	SoundData.master_volume_right = OrigSoundData.master_volume_right;
 	SoundData.echo_volume_left = OrigSoundData.echo_volume_left;
-	SoundData.echo_volume_right = OrigSoundData.echo_volume_right; 
+	SoundData.echo_volume_right = OrigSoundData.echo_volume_right;
 	SoundData.echo_enable = OrigSoundData.echo_enable;
 	SoundData.echo_feedback = OrigSoundData.echo_feedback;
 	SoundData.echo_ptr = OrigSoundData.echo_ptr;

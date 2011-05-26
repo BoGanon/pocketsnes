@@ -4,7 +4,7 @@
  * (c) Copyright 1996 - 2001 Gary Henderson (gary.henderson@ntlworld.com) and
  *                           Jerremy Koot (jkoot@snes9x.com)
  *
- * Super FX C emulator code 
+ * Super FX C emulator code
  * (c) Copyright 1997 - 1999 Ivar (ivar@snes9x.com) and
  *                           Gary Henderson.
  * Super FX assembler emulator code (c) Copyright 1998 zsKnight and _Demo_.
@@ -89,24 +89,24 @@ int Init_2xSaI(uint32 BitFormat)
 
 STATIC inline int GetResult1(uint32 A, uint32 B, uint32 C, uint32 D, uint32 E)
 {
- int x = 0; 
+ int x = 0;
  int y = 0;
  int r = 0;
  if (A == C) x+=1; else if (B == C) y+=1;
  if (A == D) x+=1; else if (B == D) y+=1;
- if (x <= 1) r+=1; 
+ if (x <= 1) r+=1;
  if (y <= 1) r-=1;
  return r;
 }
 
-STATIC inline int GetResult2(uint32 A, uint32 B, uint32 C, uint32 D, uint32 E) 
+STATIC inline int GetResult2(uint32 A, uint32 B, uint32 C, uint32 D, uint32 E)
 {
- int x = 0; 
+ int x = 0;
  int y = 0;
  int r = 0;
  if (A == C) x+=1; else if (B == C) y+=1;
  if (A == D) x+=1; else if (B == D) y+=1;
- if (x <= 1) r-=1; 
+ if (x <= 1) r-=1;
  if (y <= 1) r+=1;
  return r;
 }
@@ -114,12 +114,12 @@ STATIC inline int GetResult2(uint32 A, uint32 B, uint32 C, uint32 D, uint32 E)
 
 STATIC inline int GetResult(uint32 A, uint32 B, uint32 C, uint32 D)
 {
- int x = 0; 
+ int x = 0;
  int y = 0;
  int r = 0;
  if (A == C) x+=1; else if (B == C) y+=1;
  if (A == D) x+=1; else if (B == D) y+=1;
- if (x <= 1) r+=1; 
+ if (x <= 1) r+=1;
  if (y <= 1) r-=1;
  return r;
 }
@@ -180,7 +180,7 @@ void Super2xSaI(uint8 *srcPtr, uint32 srcPitch,
 #endif
         uint32 Nextline = srcPitch >> 1;
 
-		for (height; height; height-=1)
+		for (; height; height-=1)
 	{
 	    bP = (uint16 *) srcPtr;
 	    dP = (uint32 *) dstPtr;
@@ -328,7 +328,8 @@ void SuperEagle(uint8 *srcPtr, uint32 srcPitch,
 {
     uint32 *dP;
     uint16 *bP;
-#ifndef _SNESPPC
+
+#ifdef MMX
     uint16 *xP;
 #endif
 
@@ -351,7 +352,7 @@ void SuperEagle(uint8 *srcPtr, uint32 srcPitch,
 #endif
         uint32 Nextline = srcPitch >> 1;
 
-        for (height; height; height-=1)
+        for (; height; height-=1)
 	{
 	    bP = (uint16 *) srcPtr;
 	    dP = (uint32 *) dstPtr;
@@ -507,7 +508,7 @@ void _2xSaI(uint8 *srcPtr, uint32 srcPitch,
 {
     uint32 *dP;
     uint16 *bP;
-#ifndef _SNESPPC
+#ifdef MMX
     uint16 *xP;
 #endif
 
@@ -531,7 +532,7 @@ void _2xSaI(uint8 *srcPtr, uint32 srcPitch,
 #endif
         uint32 Nextline = srcPitch >> 1;
 
-        for (height; height; height-=1)
+        for (; height; height-=1)
 	{
 	    bP = (uint16 *) srcPtr;
 	    dP = (uint32 *) dstPtr;

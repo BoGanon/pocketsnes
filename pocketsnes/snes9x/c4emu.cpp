@@ -4,7 +4,7 @@
  * (c) Copyright 1996 - 2001 Gary Henderson (gary.henderson@ntlworld.com) and
  *                           Jerremy Koot (jkoot@snes9x.com)
  *
- * Super FX C emulator code 
+ * Super FX C emulator code
  * (c) Copyright 1997 - 1999 Ivar (ivar@snes9x.com) and
  *                           Gary Henderson.
  * Super FX assembler emulator code (c) Copyright 1998 zsKnight and _Demo_.
@@ -76,12 +76,17 @@ void S9xC4ConvOAM ()
 {
     C4Timer = (C4Timer + 1) & 15;
     C4Timer2 = (C4Timer2 + 1) & 7;
+
+    // Used for cache?
+    // optimized out by compiler anyway
+#if 0
     uint32 count = Memory.FillRAM [0x6620];
     uint32 bgscrollx = READ_WORD (&Memory.FillRAM [0x6621]);
     uint32 bgscrolly = READ_WORD (&Memory.FillRAM [0x6623]);
     uint8 *C4usprptr = Memory.C4RAM + 0x200 + (C4ObjDisp >> 4);
     uint8 *edi = Memory.C4RAM + C4ObjDisp;
     uint8 *esi = Memory.C4RAM + 0x220;
+#endif
 }
 
 void S9xC4ProcessSprites ()

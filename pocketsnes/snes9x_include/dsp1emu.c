@@ -51,7 +51,7 @@ void Log_Message (char *Message, ...)
    va_start(ap,Message);
    vsprintf(Msg,Message,ap );
    va_end(ap);
-	
+
    strcat(Msg,"\r\n\0");
    fwrite(Msg,strlen(Msg),1,LogFile);
    fflush (LogFile);
@@ -63,7 +63,7 @@ void Start_Log (void)
 //  [4/15/2001]	char *p;
 
    strcpy(LogFileName,"dsp1emu.log\0");
-	
+
    LogFile = fopen(LogFileName,"wb");
 }
 
@@ -93,7 +93,7 @@ double *SinTable2;
 
 double Atan(double x)
 {
-	if ((x>=1) || (x<=1)) 
+	if ((x>=1) || (x<=1))
 		return (x/(1+0.28*x*x));
 	else
 		return (PI/2 - Atan(1/x));
@@ -273,8 +273,8 @@ void DSPOp10()
 	if (Op10Temp == 0) {
 		Op10CoefficientR = 0;
 	} else
-		Op10Temp = 1/Op10Temp;	
-        if (Op10Temp > 0) 
+		Op10Temp = 1/Op10Temp;
+        if (Op10Temp > 0)
                 while (Op10Temp>=1.0) {
                         Op10Temp=Op10Temp/2.0;
                         Op10ExponentR++;
@@ -284,7 +284,7 @@ void DSPOp10()
                         Op10Temp=Op10Temp/2.0;
                         Op10ExponentR++;
                 }
-        Op10CoefficientR = Op10Temp*32768;
+        Op10CoefficientR = (short)(Op10Temp*32768.0f);
 	#ifdef DebugDSP1
         Log_Message("OP10 INV %d*2^%d = %d*2^%d", Op10Coefficient, Op10Exponent, Op10CoefficientR, Op10ExponentR);
 	#endif
@@ -301,7 +301,7 @@ short Op04Cos;
 void DSPOp04()
 {
    int angle;
-   
+
    angle = Angle(Op04Angle);
 
    Op04Sin = Sin(angle) * Op04Radius;
@@ -317,18 +317,18 @@ void DSPOp04()
 void DSPOp04()
 {
    double angle;
-   
+
    angle = Op04Angle*2*PI/65536.0;
 
-   Op04Sin = sin(angle) * Op04Radius;
-   Op04Cos = cos(angle) * Op04Radius;
+   Op04Sin = (short)(sin(angle) * Op04Radius);
+   Op04Cos = (short)(cos(angle) * Op04Radius);
 
    #ifdef DebugDSP1
       Log_Message("OP04 Angle:%d Radius:%d",(Op04Angle/256)&255,Op04Radius);
       Log_Message("OP04 SIN:%d COS:%d",Op04Sin,Op04Cos);
    #endif
 }
-#endif 
+#endif
 
 unsigned short Op0CA;
 short Op0CX1;
@@ -339,8 +339,8 @@ short Op0CY2;
 #ifdef __OPT0C__
 void DSPOp0C()
 {
-   Op0CX2=(Op0CX1*Cos(Angle(Op0CA))+Op0CY1*Sin(Angle(Op0CA)));
-   Op0CY2=(Op0CX1*-Sin(Angle(Op0CA))+Op0CY1*Cos(Angle(Op0CA)));
+   Op0CX2=(short)(Op0CX1*Cos(Angle(Op0CA))+Op0CY1*Sin(Angle(Op0CA)));
+   Op0CY2=(short)(Op0CX1*-Sin(Angle(Op0CA))+Op0CY1*Cos(Angle(Op0CA)));
    #ifdef DebugDSP1
       Log_Message("OP0C Angle:%d X:%d Y:%d CX:%d CY:%d",(Op0CA/256)&255,Op0CX1,Op0CY1,Op0CX2,Op0CY2);
    #endif
@@ -348,7 +348,7 @@ void DSPOp0C()
 #else
 void DSPOp0C()
 {
-	
+
    Op0CX2=(Op0CX1*cos(Op0CA*2*PI/65536.0)+Op0CY1*sin(Op0CA*2*PI/65536.0));
    Op0CY2=(Op0CX1*-sin(Op0CA*2*PI/65536.0)+Op0CY1*cos(Op0CA*2*PI/65536.0));
    #ifdef DebugDSP1
@@ -424,7 +424,7 @@ void DSPOp02()
 	ViewerX1=Sin(Angle(Op02AZS))*Sin(Angle(Op02AAS));
 	ViewerY1=Sin(Angle(Op02AZS))*Cos(Angle(Op02AAS));
 
-	
+
    #ifdef debug02
    printf("\nViewerX1 : %f ViewerY1 : %f ViewerZ1 : %f\n",ViewerX1,ViewerY1,
                                                                    ViewerZ1);
@@ -494,7 +494,7 @@ void DSPOp02()
    CenterY = (cos(NAasB)*ViewerZc*CXdistance)+ViewerYc;
    if (CenterY<-32768) CenterY = -32768; if (CenterY>32767) CenterY=32767;
 
-   TValDebug = (NAzsB*65536/6.28);
+   TValDebug = (short)(NAzsB*65536/6.28);
    TValDebug2 = ScrDispl;
 
 //   if (Op02CY < 0) {Op02CYSup = Op02CY/256; Op02CY = 0;}
@@ -812,7 +812,7 @@ void DSPOp06()
       Log_Message("OP06 H:%d V:%d S:%d",Op06H,Op06V,Op06S);
    #endif
 }
-#endif 
+#endif
 
 
 
@@ -833,7 +833,7 @@ void MultMatrixB(double result[3][3],double mat1[3][3],double mat2[3][3])
    result[1][0]=(mat1[1][0]*mat2[0][0]+mat1[1][1]*mat2[1][0]+mat1[1][2]*mat2[2][0]);
    result[1][1]=(mat1[1][0]*mat2[0][1]+mat1[1][1]*mat2[1][1]+mat1[1][2]*mat2[2][1]);
    result[1][2]=(mat1[1][0]*mat2[0][2]+mat1[1][1]*mat2[1][2]+mat1[1][2]*mat2[2][2]);
-   
+
    result[2][0]=(mat1[2][0]*mat2[0][0]+mat1[2][1]*mat2[1][0]+mat1[2][2]*mat2[2][0]);
    result[2][1]=(mat1[2][0]*mat2[0][1]+mat1[2][1]*mat2[1][1]+mat1[2][2]*mat2[2][1]);
    result[2][2]=(mat1[2][0]*mat2[0][2]+mat1[2][1]*mat2[1][2]+mat1[2][2]*mat2[2][2]);
@@ -866,7 +866,7 @@ void DSPOp01()
    xr = Angle(Op01Yr);
    yr = Angle(Op01Xr);
 
-   matrixB[0][0]=1;       matrixB[0][1]=0;        matrixB[0][2]=0;       
+   matrixB[0][0]=1;       matrixB[0][1]=0;        matrixB[0][2]=0;
    matrixB[1][0]=0;       matrixB[1][1]=Cos(xr);  matrixB[1][2]=-Sin(xr);
    matrixB[2][0]=0;       matrixB[2][1]=Sin(xr);  matrixB[2][2]=Cos(xr);
 
@@ -884,9 +884,9 @@ void DSPOp01()
 
    sc = ((double)Op01m)/32768.0;
 
-   matrixA[0][0]=matrixB[0][0]; matrixA[0][1]=matrixB[0][1]; matrixA[0][2]=matrixB[0][2]; 
-   matrixA[1][0]=matrixB[1][0]; matrixA[1][1]=matrixB[1][1]; matrixA[1][2]=matrixB[1][2]; 
-   matrixA[2][0]=matrixB[2][0]; matrixA[2][1]=matrixB[2][1]; matrixA[2][2]=matrixB[2][2]; 
+   matrixA[0][0]=matrixB[0][0]; matrixA[0][1]=matrixB[0][1]; matrixA[0][2]=matrixB[0][2];
+   matrixA[1][0]=matrixB[1][0]; matrixA[1][1]=matrixB[1][1]; matrixA[1][2]=matrixB[1][2];
+   matrixA[2][0]=matrixB[2][0]; matrixA[2][1]=matrixB[2][1]; matrixA[2][2]=matrixB[2][2];
 
    #ifdef DebugDSP1
       Log_Message("OP01 ZR: %d XR: %d YR: %d",Op01Zr,Op01Xr,Op01Yr);
@@ -903,7 +903,7 @@ void DSPOp01()
    xr = ((double)Op01Yr)*6.2832/65536;
    yr = ((double)Op01Xr)*6.2832/65536;
 
-   matrixB[0][0]=1;       matrixB[0][1]=0;        matrixB[0][2]=0;       
+   matrixB[0][0]=1;       matrixB[0][1]=0;        matrixB[0][2]=0;
    matrixB[1][0]=0;       matrixB[1][1]=cos(xr);  matrixB[1][2]=-sin(xr);
    matrixB[2][0]=0;       matrixB[2][1]=sin(xr);  matrixB[2][2]=cos(xr);
 
@@ -921,9 +921,9 @@ void DSPOp01()
 
    sc = ((double)Op01m)/32768.0;
 
-   matrixA[0][0]=matrixB[0][0]; matrixA[0][1]=matrixB[0][1]; matrixA[0][2]=matrixB[0][2]; 
-   matrixA[1][0]=matrixB[1][0]; matrixA[1][1]=matrixB[1][1]; matrixA[1][2]=matrixB[1][2]; 
-   matrixA[2][0]=matrixB[2][0]; matrixA[2][1]=matrixB[2][1]; matrixA[2][2]=matrixB[2][2]; 
+   matrixA[0][0]=matrixB[0][0]; matrixA[0][1]=matrixB[0][1]; matrixA[0][2]=matrixB[0][2];
+   matrixA[1][0]=matrixB[1][0]; matrixA[1][1]=matrixB[1][1]; matrixA[1][2]=matrixB[1][2];
+   matrixA[2][0]=matrixB[2][0]; matrixA[2][1]=matrixB[2][1]; matrixA[2][2]=matrixB[2][2];
 
    #ifdef DebugDSP1
       Log_Message("OP01 ZR: %d XR: %d YR: %d",Op01Zr,Op01Xr,Op01Yr);
@@ -941,7 +941,7 @@ void DSPOp11()
    xr = Angle(Op11Yr);
    yr = Angle(Op11Xr);
 
-   matrixB[0][0]=1;       matrixB[0][1]=0;        matrixB[0][2]=0;       
+   matrixB[0][0]=1;       matrixB[0][1]=0;        matrixB[0][2]=0;
    matrixB[1][0]=0;       matrixB[1][1]=Cos(xr);  matrixB[1][2]=-Sin(xr);
    matrixB[2][0]=0;       matrixB[2][1]=Sin(xr);  matrixB[2][2]=Cos(xr);
 
@@ -959,9 +959,9 @@ void DSPOp11()
 
    sc2 = ((double)Op11m)/32768.0;
 
-   matrixA2[0][0]=matrixB[0][0]; matrixA2[0][1]=matrixB[0][1]; matrixA2[0][2]=matrixB[0][2]; 
-   matrixA2[1][0]=matrixB[1][0]; matrixA2[1][1]=matrixB[1][1]; matrixA2[1][2]=matrixB[1][2]; 
-   matrixA2[2][0]=matrixB[2][0]; matrixA2[2][1]=matrixB[2][1]; matrixA2[2][2]=matrixB[2][2]; 
+   matrixA2[0][0]=matrixB[0][0]; matrixA2[0][1]=matrixB[0][1]; matrixA2[0][2]=matrixB[0][2];
+   matrixA2[1][0]=matrixB[1][0]; matrixA2[1][1]=matrixB[1][1]; matrixA2[1][2]=matrixB[1][2];
+   matrixA2[2][0]=matrixB[2][0]; matrixA2[2][1]=matrixB[2][1]; matrixA2[2][2]=matrixB[2][2];
    #ifdef DebugDSP1
       Log_Message("OP11 ZR: %d XR: %d YR: %d SC: %d",Op11Zr,Op11Xr,Op11Yr,Op11m);
    #endif
@@ -976,7 +976,7 @@ void DSPOp11()
    xr = ((double)Op11Yr)*6.2832/65536;
    yr = ((double)Op11Xr)*6.2832/65536;
 
-   matrixB[0][0]=1;       matrixB[0][1]=0;        matrixB[0][2]=0;       
+   matrixB[0][0]=1;       matrixB[0][1]=0;        matrixB[0][2]=0;
    matrixB[1][0]=0;       matrixB[1][1]=cos(xr);  matrixB[1][2]=-sin(xr);
    matrixB[2][0]=0;       matrixB[2][1]=sin(xr);  matrixB[2][2]=cos(xr);
 
@@ -994,9 +994,9 @@ void DSPOp11()
 
    sc2 = ((double)Op11m)/32768.0;
 
-   matrixA2[0][0]=matrixB[0][0]; matrixA2[0][1]=matrixB[0][1]; matrixA2[0][2]=matrixB[0][2]; 
-   matrixA2[1][0]=matrixB[1][0]; matrixA2[1][1]=matrixB[1][1]; matrixA2[1][2]=matrixB[1][2]; 
-   matrixA2[2][0]=matrixB[2][0]; matrixA2[2][1]=matrixB[2][1]; matrixA2[2][2]=matrixB[2][2]; 
+   matrixA2[0][0]=matrixB[0][0]; matrixA2[0][1]=matrixB[0][1]; matrixA2[0][2]=matrixB[0][2];
+   matrixA2[1][0]=matrixB[1][0]; matrixA2[1][1]=matrixB[1][1]; matrixA2[1][2]=matrixB[1][2];
+   matrixA2[2][0]=matrixB[2][0]; matrixA2[2][1]=matrixB[2][1]; matrixA2[2][2]=matrixB[2][2];
    #ifdef DebugDSP1
       Log_Message("OP11 ZR: %d XR: %d YR: %d SC: %d",Op11Zr,Op11Xr,Op11Yr,Op11m);
    #endif
@@ -1014,7 +1014,7 @@ void DSPOp21()
    yr = Angle(Op21Xr);
 
 
-   matrixB[0][0]=1;       matrixB[0][1]=0;        matrixB[0][2]=0;       
+   matrixB[0][0]=1;       matrixB[0][1]=0;        matrixB[0][2]=0;
    matrixB[1][0]=0;       matrixB[1][1]=Cos(xr);  matrixB[1][2]=-Sin(xr);
    matrixB[2][0]=0;       matrixB[2][1]=Sin(xr);  matrixB[2][2]=Cos(xr);
 
@@ -1032,9 +1032,9 @@ void DSPOp21()
 
    sc3 = ((double)Op21m)/32768.0;
 
-   matrixA3[0][0]=matrixB[0][0]; matrixA3[0][1]=matrixB[0][1]; matrixA3[0][2]=matrixB[0][2]; 
-   matrixA3[1][0]=matrixB[1][0]; matrixA3[1][1]=matrixB[1][1]; matrixA3[1][2]=matrixB[1][2]; 
-   matrixA3[2][0]=matrixB[2][0]; matrixA3[2][1]=matrixB[2][1]; matrixA3[2][2]=matrixB[2][2]; 
+   matrixA3[0][0]=matrixB[0][0]; matrixA3[0][1]=matrixB[0][1]; matrixA3[0][2]=matrixB[0][2];
+   matrixA3[1][0]=matrixB[1][0]; matrixA3[1][1]=matrixB[1][1]; matrixA3[1][2]=matrixB[1][2];
+   matrixA3[2][0]=matrixB[2][0]; matrixA3[2][1]=matrixB[2][1]; matrixA3[2][2]=matrixB[2][2];
    #ifdef DebugDSP1
       Log_Message("OP21 ZR: %d XR: %d YR: %d",Op21Zr,Op21Xr,Op21Yr);
    #endif
@@ -1049,7 +1049,7 @@ void DSPOp21()
    xr = ((double)Op21Yr)*6.2832/65536;
    yr = ((double)Op21Xr)*6.2832/65536;
 
-   matrixB[0][0]=1;       matrixB[0][1]=0;        matrixB[0][2]=0;       
+   matrixB[0][0]=1;       matrixB[0][1]=0;        matrixB[0][2]=0;
    matrixB[1][0]=0;       matrixB[1][1]=cos(xr);  matrixB[1][2]=-sin(xr);
    matrixB[2][0]=0;       matrixB[2][1]=sin(xr);  matrixB[2][2]=cos(xr);
 
@@ -1067,9 +1067,9 @@ void DSPOp21()
 
    sc3 = ((double)Op21m)/32768.0;
 
-   matrixA3[0][0]=matrixB[0][0]; matrixA3[0][1]=matrixB[0][1]; matrixA3[0][2]=matrixB[0][2]; 
-   matrixA3[1][0]=matrixB[1][0]; matrixA3[1][1]=matrixB[1][1]; matrixA3[1][2]=matrixB[1][2]; 
-   matrixA3[2][0]=matrixB[2][0]; matrixA3[2][1]=matrixB[2][1]; matrixA3[2][2]=matrixB[2][2]; 
+   matrixA3[0][0]=matrixB[0][0]; matrixA3[0][1]=matrixB[0][1]; matrixA3[0][2]=matrixB[0][2];
+   matrixA3[1][0]=matrixB[1][0]; matrixA3[1][1]=matrixB[1][1]; matrixA3[1][2]=matrixB[1][2];
+   matrixA3[2][0]=matrixB[2][0]; matrixA3[2][1]=matrixB[2][1]; matrixA3[2][2]=matrixB[2][2];
    #ifdef DebugDSP1
       Log_Message("OP21 ZR: %d XR: %d YR: %d",Op21Zr,Op21Xr,Op21Yr);
    #endif
@@ -1285,8 +1285,8 @@ void DSPOp0E()
    RVPos = Op0EV;
    RHPos = Op0EH;
    GetRXYPos();
-   Op0EX = RXRes;
-   Op0EY = RYRes;
+   Op0EX = (short)RXRes;
+   Op0EY = (short)RYRes;
 
    #ifdef DebugDSP1
       Log_Message("OP0E COORDINATE H:%d V:%d   X:%d Y:%d",Op0EH,Op0EV,Op0EX,Op0EY);
@@ -1308,15 +1308,15 @@ short Op2BS;
 
 void DSPOp0B()
 {
-    Op0BS = (Op0BX*matrixA[0][0]+Op0BY*matrixA2[0][1]+Op0BZ*matrixA2[0][2]);
+    Op0BS = (short)(Op0BX*matrixA[0][0]+Op0BY*matrixA2[0][1]+Op0BZ*matrixA2[0][2]);
 #ifdef DebugDSP1
         Log_Message("OP0B");
 #endif
 }
 
 void DSPOp1B()
-{   
-    Op1BS = (Op1BX*matrixA2[0][0]+Op1BY*matrixA2[0][1]+Op1BZ*matrixA2[0][2]);
+{
+    Op1BS = (short)(Op1BX*matrixA2[0][0]+Op1BY*matrixA2[0][1]+Op1BZ*matrixA2[0][2]);
 #ifdef DebugDSP1
       Log_Message("OP1B X: %d Y: %d Z: %d S: %d",Op1BX,Op1BY,Op1BZ,Op1BS);
       Log_Message("     MX: %d MY: %d MZ: %d Scale: %d",(short)(matrixA2[0][0]*100),(short)(matrixA2[0][1]*100),(short)(matrixA2[0][2]*100),(short)(sc2*100));
@@ -1326,7 +1326,7 @@ void DSPOp1B()
 
 void DSPOp2B()
 {
-    Op2BS = (Op2BX*matrixA3[0][0]+Op2BY*matrixA3[0][1]+Op2BZ*matrixA3[0][2]);
+    Op2BS = (short)(Op2BX*matrixA3[0][0]+Op2BY*matrixA3[0][1]+Op2BZ*matrixA3[0][2]);
 #ifdef DebugDSP1
       Log_Message("OP2B");
 #endif
@@ -1394,17 +1394,17 @@ void DSPOp1C()
    za = Angle(Op1CZ);
 
    // rotate around Z
-   Op1CX1=(Op1CXBR*Cos(za)+Op1CYBR*Sin(za));
-   Op1CY1=(Op1CXBR*-Sin(za)+Op1CYBR*Cos(za));
+   Op1CX1=(short)(Op1CXBR*Cos(za)+Op1CYBR*Sin(za));
+   Op1CY1=(short)(Op1CXBR*-Sin(za)+Op1CYBR*Cos(za));
    Op1CZ1=Op1CZBR;
    // rotate around Y
-   Op1CX2=(Op1CX1*Cos(ya)+Op1CZ1*-Sin(ya));
+   Op1CX2=(short)(Op1CX1*Cos(ya)+Op1CZ1*-Sin(ya));
    Op1CY2=Op1CY1;
-   Op1CZ2=(Op1CX1*Sin(ya)+Op1CZ1*Cos(ya));
+   Op1CZ2=(short)(Op1CX1*Sin(ya)+Op1CZ1*Cos(ya));
    // rotate around X
    Op1CXAR=Op1CX2;
-   Op1CYAR=(Op1CY2*Cos(xa)+Op1CZ2*Sin(xa));
-   Op1CZAR=(Op1CY2*-Sin(xa)+Op1CZ2*Cos(xa));
+   Op1CYAR=(short)(Op1CY2*Cos(xa)+Op1CZ2*Sin(xa));
+   Op1CZAR=(short)(Op1CY2*-Sin(xa)+Op1CZ2*Cos(xa));
 
    #ifdef DebugDSP1
       Log_Message("OP1C Apply Matrix CX:%d CY:%d CZ",Op1CXAR,Op1CYAR,Op1CZAR);
