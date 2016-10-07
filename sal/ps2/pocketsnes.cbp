@@ -1,0 +1,474 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="pocketsnes" />
+		<Option makefile="makefile.ps2" />
+		<Option makefile_is_custom="1" />
+		<Option execution_dir="/home/ragnarok2040/git/pocketsnes/pocketsnes" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<MakeCommands>
+			<Build command="$make -f $makefile $target" />
+			<CompileFile command="$make -f $makefile $file" />
+			<Clean command="$make -f $makefile clean" />
+			<DistClean command="$make -f $makefile distclean$target" />
+			<AskRebuildNeeded command="$make -q -f $makefile $target" />
+			<SilentBuild command="$make -s -f $makefile $target" />
+		</MakeCommands>
+		<Build>
+			<Target title="all">
+				<Option type="4" />
+				<Option compiler="gcc" />
+				<MakeCommands>
+					<Build command="$make -f $makefile $target" />
+					<CompileFile command="$make -f $makefile $file" />
+					<Clean command="$make -f $makefile clean" />
+					<DistClean command="$make -f $makefile distclean$target" />
+					<AskRebuildNeeded command="$make -q -f $makefile $target" />
+					<SilentBuild command="$make -s -f $makefile $target" />
+				</MakeCommands>
+			</Target>
+			<Target title="install">
+				<Option type="4" />
+				<Option compiler="gcc" />
+				<MakeCommands>
+					<Build command="$make -f $makefile $target" />
+					<CompileFile command="$make -f $makefile $file" />
+					<Clean command="$make -f $makefile clean" />
+					<DistClean command="$make -f $makefile distclean$target" />
+					<AskRebuildNeeded command="$make -q -f $makefile $target" />
+					<SilentBuild command="$make -s -f $makefile $target" />
+				</MakeCommands>
+			</Target>
+			<Target title="clean">
+				<Option type="4" />
+				<Option compiler="gcc" />
+				<MakeCommands>
+					<Build command="$make -f $makefile $target" />
+					<CompileFile command="$make -f $makefile $file" />
+					<Clean command="$make -f $makefile clean" />
+					<DistClean command="$make -f $makefile distclean$target" />
+					<AskRebuildNeeded command="$make -q -f $makefile $target" />
+					<SilentBuild command="$make -s -f $makefile $target" />
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+		</Compiler>
+		<Unit filename="../../pocketsnes/arm/asm_util.S" />
+		<Unit filename="../../pocketsnes/arm/asmmemfuncs.h" />
+		<Unit filename="../../pocketsnes/arm/dspMixer.s" />
+		<Unit filename="../../pocketsnes/arm/m3d_func.S" />
+		<Unit filename="../../pocketsnes/arm/memcpy.s" />
+		<Unit filename="../../pocketsnes/arm/memset.s" />
+		<Unit filename="../../pocketsnes/arm/misc.s" />
+		<Unit filename="../../pocketsnes/arm/os9x_65c816.s" />
+		<Unit filename="../../pocketsnes/arm/os9x_65c816_def.h" />
+		<Unit filename="../../pocketsnes/arm/os9x_65c816_mac_gen.h" />
+		<Unit filename="../../pocketsnes/arm/os9x_65c816_mac_mem.h" />
+		<Unit filename="../../pocketsnes/arm/os9x_65c816_mac_op.h" />
+		<Unit filename="../../pocketsnes/arm/os9x_asm_cpu.cpp" />
+		<Unit filename="../../pocketsnes/arm/os9x_asm_cpu.h" />
+		<Unit filename="../../pocketsnes/arm/osnes9xgp_asmfunc.S" />
+		<Unit filename="../../pocketsnes/arm/spc700a.s" />
+		<Unit filename="../../pocketsnes/arm/spc_decode.S" />
+		<Unit filename="../../pocketsnes/dingoo/port.h" />
+		<Unit filename="../../pocketsnes/dingoo/sim/sim.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../pocketsnes/giz/giz_kgsdk.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../pocketsnes/giz/giz_kgsdk.h" />
+		<Unit filename="../../pocketsnes/giz/giz_kgsdkasm.s" />
+		<Unit filename="../../pocketsnes/giz/giz_sdk_kgsdk.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../pocketsnes/giz/giz_sdk_kgsdk.h" />
+		<Unit filename="../../pocketsnes/gp2x/gp2x_highlightbar.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../pocketsnes/gp2x/gp2x_menu_header.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../pocketsnes/gp2x/gp2x_menutile.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../pocketsnes/gp2x/gp2x_sdk.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../pocketsnes/gp2x/gp2x_sdk.h" />
+		<Unit filename="../../pocketsnes/gp2x/gp32_func.h" />
+		<Unit filename="../../pocketsnes/gp2x/mmuhack.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../pocketsnes/gp2x/squidgehack.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../pocketsnes/gp2x/squidgehack.h" />
+		<Unit filename="../../pocketsnes/gp2x/usbjoy.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../pocketsnes/gp2x/usbjoy.h" />
+		<Unit filename="../../pocketsnes/linux/port.h" />
+		<Unit filename="../../pocketsnes/makefile.ps2" />
+		<Unit filename="../../pocketsnes/menu/main.cpp" />
+		<Unit filename="../../pocketsnes/menu/menu.cpp" />
+		<Unit filename="../../pocketsnes/menu/menu.h" />
+		<Unit filename="../../pocketsnes/menu/savestateio.cpp" />
+		<Unit filename="../../pocketsnes/menu/savestateio.h" />
+		<Unit filename="../../pocketsnes/menu_old/input.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../pocketsnes/menu_old/ioapi.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../pocketsnes/menu_old/ioapi.h" />
+		<Unit filename="../../pocketsnes/menu_old/main.cpp" />
+		<Unit filename="../../pocketsnes/menu_old/menu.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../pocketsnes/menu_old/menu.h" />
+		<Unit filename="../../pocketsnes/menu_old/unzip.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../pocketsnes/menu_old/unzip.h" />
+		<Unit filename="../../pocketsnes/menu_old/zip.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../pocketsnes/menu_old/zip.h" />
+		<Unit filename="../../pocketsnes/ps2/port.h" />
+		<Unit filename="../../pocketsnes/snes9x/2xsaiwin.cpp" />
+		<Unit filename="../../pocketsnes/snes9x/apu.cpp" />
+		<Unit filename="../../pocketsnes/snes9x/c4.cpp" />
+		<Unit filename="../../pocketsnes/snes9x/c4emu.cpp" />
+		<Unit filename="../../pocketsnes/snes9x/cheats.cpp" />
+		<Unit filename="../../pocketsnes/snes9x/cheats2.cpp" />
+		<Unit filename="../../pocketsnes/snes9x/clip.cpp" />
+		<Unit filename="../../pocketsnes/snes9x/cpu.cpp" />
+		<Unit filename="../../pocketsnes/snes9x/cpuexec.cpp" />
+		<Unit filename="../../pocketsnes/snes9x/cpuops.cpp" />
+		<Unit filename="../../pocketsnes/snes9x/data.cpp" />
+		<Unit filename="../../pocketsnes/snes9x/debug.cpp" />
+		<Unit filename="../../pocketsnes/snes9x/dma.cpp" />
+		<Unit filename="../../pocketsnes/snes9x/dsp1.cpp" />
+		<Unit filename="../../pocketsnes/snes9x/fxemu.cpp" />
+		<Unit filename="../../pocketsnes/snes9x/fxinst.cpp" />
+		<Unit filename="../../pocketsnes/snes9x/gfx.cpp" />
+		<Unit filename="../../pocketsnes/snes9x/globals.cpp" />
+		<Unit filename="../../pocketsnes/snes9x/loadzip.cpp" />
+		<Unit filename="../../pocketsnes/snes9x/memmap.cpp" />
+		<Unit filename="../../pocketsnes/snes9x/ppu.cpp" />
+		<Unit filename="../../pocketsnes/snes9x/sa1.cpp" />
+		<Unit filename="../../pocketsnes/snes9x/sa1cpu.cpp" />
+		<Unit filename="../../pocketsnes/snes9x/sdd1.cpp" />
+		<Unit filename="../../pocketsnes/snes9x/snaporig.cpp" />
+		<Unit filename="../../pocketsnes/snes9x/snapshot.cpp" />
+		<Unit filename="../../pocketsnes/snes9x/soundux.cpp" />
+		<Unit filename="../../pocketsnes/snes9x/spc700.cpp" />
+		<Unit filename="../../pocketsnes/snes9x/srtc.cpp" />
+		<Unit filename="../../pocketsnes/snes9x/tile.cpp" />
+		<Unit filename="../../pocketsnes/snes9x_include/65c816.h" />
+		<Unit filename="../../pocketsnes/snes9x_include/apu.h" />
+		<Unit filename="../../pocketsnes/snes9x_include/apumem.h" />
+		<Unit filename="../../pocketsnes/snes9x_include/cheats.h" />
+		<Unit filename="../../pocketsnes/snes9x_include/cpuaddr.h" />
+		<Unit filename="../../pocketsnes/snes9x_include/cpuexec.h" />
+		<Unit filename="../../pocketsnes/snes9x_include/cpumacro.h" />
+		<Unit filename="../../pocketsnes/snes9x_include/cpuops.h" />
+		<Unit filename="../../pocketsnes/snes9x_include/debug.h" />
+		<Unit filename="../../pocketsnes/snes9x_include/display.h" />
+		<Unit filename="../../pocketsnes/snes9x_include/dma.h" />
+		<Unit filename="../../pocketsnes/snes9x_include/dsp1.h" />
+		<Unit filename="../../pocketsnes/snes9x_include/dsp1emu.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../pocketsnes/snes9x_include/dsp1emu_screw.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../pocketsnes/snes9x_include/font.h" />
+		<Unit filename="../../pocketsnes/snes9x_include/fxemu.h" />
+		<Unit filename="../../pocketsnes/snes9x_include/fxinst.h" />
+		<Unit filename="../../pocketsnes/snes9x_include/getset.h" />
+		<Unit filename="../../pocketsnes/snes9x_include/gfx.h" />
+		<Unit filename="../../pocketsnes/snes9x_include/memmap.h" />
+		<Unit filename="../../pocketsnes/snes9x_include/messages.h" />
+		<Unit filename="../../pocketsnes/snes9x_include/missing.h" />
+		<Unit filename="../../pocketsnes/snes9x_include/pixform.h" />
+		<Unit filename="../../pocketsnes/snes9x_include/ppu.h" />
+		<Unit filename="../../pocketsnes/snes9x_include/sa1.h" />
+		<Unit filename="../../pocketsnes/snes9x_include/sdd1.h" />
+		<Unit filename="../../pocketsnes/snes9x_include/snaporig.h" />
+		<Unit filename="../../pocketsnes/snes9x_include/snapshot.h" />
+		<Unit filename="../../pocketsnes/snes9x_include/snes9x.h" />
+		<Unit filename="../../pocketsnes/snes9x_include/soundux.h" />
+		<Unit filename="../../pocketsnes/snes9x_include/spc700.h" />
+		<Unit filename="../../pocketsnes/snes9x_include/srtc.h" />
+		<Unit filename="../../pocketsnes/snes9x_include/tile.h" />
+		<Unit filename="../../pocketsnes/snes9x_notused/3d.h" />
+		<Unit filename="../../pocketsnes/snes9x_notused/DSP1EMU_fastcart.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../pocketsnes/snes9x_notused/DSP1_gp32.cpp" />
+		<Unit filename="../../pocketsnes/snes9x_notused/copyright.h" />
+		<Unit filename="../../pocketsnes/snes9x_notused/dsp1_gp32.h" />
+		<Unit filename="../../pocketsnes/snes9x_notused/dsp1emu_fixed.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../pocketsnes/snes9x_notused/dsp1emu_yo.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../pocketsnes/snes9x_notused/fxdbg.cpp" />
+		<Unit filename="../../pocketsnes/snes9x_notused/gfx_org.cpp" />
+		<Unit filename="../../pocketsnes/snes9x_notused/keycodes.h" />
+		<Unit filename="../../pocketsnes/snes9x_notused/language.h" />
+		<Unit filename="../../pocketsnes/snes9x_notused/movie.cpp" />
+		<Unit filename="../../pocketsnes/snes9x_notused/movie.h" />
+		<Unit filename="../../pocketsnes/snes9x_notused/netplay.h" />
+		<Unit filename="../../pocketsnes/snes9x_notused/port.h" />
+		<Unit filename="../../pocketsnes/snes9x_notused/ppu_.cpp" />
+		<Unit filename="../../pocketsnes/snes9x_notused/screenshot.cpp" />
+		<Unit filename="../../pocketsnes/snes9x_notused/screenshot.h" />
+		<Unit filename="../../pocketsnes/snes9x_notused/seta.cpp" />
+		<Unit filename="../../pocketsnes/snes9x_notused/seta.h" />
+		<Unit filename="../../pocketsnes/snes9x_notused/seta010.cpp" />
+		<Unit filename="../../pocketsnes/snes9x_notused/seta011.cpp" />
+		<Unit filename="../../pocketsnes/snes9x_notused/seta018.cpp" />
+		<Unit filename="../../pocketsnes/snes9x_notused/snaporig.cpp" />
+		<Unit filename="../../pocketsnes/snes9x_notused/snaporig.h" />
+		<Unit filename="../../pocketsnes/snes9x_notused/snes9x.cpp" />
+		<Unit filename="../../pocketsnes/snes9x_notused/tile_org.cpp" />
+		<Unit filename="../../pocketsnes/snes9x_notused/tile_org.h" />
+		<Unit filename="../../pocketsnes/snes9x_notused/tiledave.cpp" />
+		<Unit filename="../../pocketsnes/snes9x_notused/tilenew.cpp" />
+		<Unit filename="../../pocketsnes/snes9x_old/2xsaiwin.cpp" />
+		<Unit filename="../../pocketsnes/snes9x_old/65c816.h" />
+		<Unit filename="../../pocketsnes/snes9x_old/apu.cpp" />
+		<Unit filename="../../pocketsnes/snes9x_old/apu.h" />
+		<Unit filename="../../pocketsnes/snes9x_old/apumem.h" />
+		<Unit filename="../../pocketsnes/snes9x_old/c4.cpp" />
+		<Unit filename="../../pocketsnes/snes9x_old/c4.h" />
+		<Unit filename="../../pocketsnes/snes9x_old/c4emu.cpp" />
+		<Unit filename="../../pocketsnes/snes9x_old/cheats.cpp" />
+		<Unit filename="../../pocketsnes/snes9x_old/cheats.h" />
+		<Unit filename="../../pocketsnes/snes9x_old/cheats2.cpp" />
+		<Unit filename="../../pocketsnes/snes9x_old/clip.cpp" />
+		<Unit filename="../../pocketsnes/snes9x_old/cpu.cpp" />
+		<Unit filename="../../pocketsnes/snes9x_old/cpuaddr.h" />
+		<Unit filename="../../pocketsnes/snes9x_old/cpuexec.cpp" />
+		<Unit filename="../../pocketsnes/snes9x_old/cpuexec.h" />
+		<Unit filename="../../pocketsnes/snes9x_old/cpumacro.h" />
+		<Unit filename="../../pocketsnes/snes9x_old/cpuops.cpp" />
+		<Unit filename="../../pocketsnes/snes9x_old/cpuops.h" />
+		<Unit filename="../../pocketsnes/snes9x_old/data.cpp" />
+		<Unit filename="../../pocketsnes/snes9x_old/debug.h" />
+		<Unit filename="../../pocketsnes/snes9x_old/display.h" />
+		<Unit filename="../../pocketsnes/snes9x_old/dma.cpp" />
+		<Unit filename="../../pocketsnes/snes9x_old/dma.h" />
+		<Unit filename="../../pocketsnes/snes9x_old/dsp1.cpp" />
+		<Unit filename="../../pocketsnes/snes9x_old/dsp1.h" />
+		<Unit filename="../../pocketsnes/snes9x_old/font.h" />
+		<Unit filename="../../pocketsnes/snes9x_old/fxemu.cpp" />
+		<Unit filename="../../pocketsnes/snes9x_old/fxemu.h" />
+		<Unit filename="../../pocketsnes/snes9x_old/fxinst.cpp" />
+		<Unit filename="../../pocketsnes/snes9x_old/fxinst.h" />
+		<Unit filename="../../pocketsnes/snes9x_old/getset.h" />
+		<Unit filename="../../pocketsnes/snes9x_old/gfx.cpp" />
+		<Unit filename="../../pocketsnes/snes9x_old/gfx.h" />
+		<Unit filename="../../pocketsnes/snes9x_old/globals.cpp" />
+		<Unit filename="../../pocketsnes/snes9x_old/loadzip.cpp" />
+		<Unit filename="../../pocketsnes/snes9x_old/memmap.cpp" />
+		<Unit filename="../../pocketsnes/snes9x_old/memmap.h" />
+		<Unit filename="../../pocketsnes/snes9x_old/messages.h" />
+		<Unit filename="../../pocketsnes/snes9x_old/missing.h" />
+		<Unit filename="../../pocketsnes/snes9x_old/pixform.h" />
+		<Unit filename="../../pocketsnes/snes9x_old/ppu.cpp" />
+		<Unit filename="../../pocketsnes/snes9x_old/ppu.h" />
+		<Unit filename="../../pocketsnes/snes9x_old/ppu_getppu.h" />
+		<Unit filename="../../pocketsnes/snes9x_old/ppu_setppu.h" />
+		<Unit filename="../../pocketsnes/snes9x_old/sa1.cpp" />
+		<Unit filename="../../pocketsnes/snes9x_old/sa1.h" />
+		<Unit filename="../../pocketsnes/snes9x_old/sa1cpu.cpp" />
+		<Unit filename="../../pocketsnes/snes9x_old/sar.h" />
+		<Unit filename="../../pocketsnes/snes9x_old/sdd1.cpp" />
+		<Unit filename="../../pocketsnes/snes9x_old/sdd1.h" />
+		<Unit filename="../../pocketsnes/snes9x_old/sdd1emu.cpp" />
+		<Unit filename="../../pocketsnes/snes9x_old/sdd1emu.h" />
+		<Unit filename="../../pocketsnes/snes9x_old/snapshot.cpp" />
+		<Unit filename="../../pocketsnes/snes9x_old/snapshot.h" />
+		<Unit filename="../../pocketsnes/snes9x_old/snes9x.h" />
+		<Unit filename="../../pocketsnes/snes9x_old/soundux.cpp" />
+		<Unit filename="../../pocketsnes/snes9x_old/soundux.h" />
+		<Unit filename="../../pocketsnes/snes9x_old/spc700.cpp" />
+		<Unit filename="../../pocketsnes/snes9x_old/spc700.h" />
+		<Unit filename="../../pocketsnes/snes9x_old/srtc.cpp" />
+		<Unit filename="../../pocketsnes/snes9x_old/srtc.h" />
+		<Unit filename="../../pocketsnes/snes9x_old/tile.cpp" />
+		<Unit filename="../../pocketsnes/snes9x_old/tile.h" />
+		<Unit filename="../../pocketsnes/spc700/debug/apu.h" />
+		<Unit filename="../../pocketsnes/spc700/debug/apumem.h" />
+		<Unit filename="../../pocketsnes/spc700/debug/port.h" />
+		<Unit filename="../../pocketsnes/spc700/debug/spc700.cpp" />
+		<Unit filename="../../pocketsnes/spc700/debug/spc700.h" />
+		<Unit filename="../../pocketsnes/spc700/spcgen.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../pocketsnes/wince/VOIMAGE.CPP" />
+		<Unit filename="../../pocketsnes/wince/VOIMAGE.H" />
+		<Unit filename="../../pocketsnes/wince/gx.h" />
+		<Unit filename="../../pocketsnes/wince/newres.h" />
+		<Unit filename="../../pocketsnes/wince/resource.h" />
+		<Unit filename="../../pocketsnes/wiz/frame_skip.h" />
+		<Unit filename="../../pocketsnes/wiz/gammatab.h" />
+		<Unit filename="../../pocketsnes/wiz/imgdecmp.h" />
+		<Unit filename="../../pocketsnes/wiz/imgrendr.h" />
+		<Unit filename="../../pocketsnes/wiz/pollux_set.cpp" />
+		<Unit filename="../../pocketsnes/wiz/pollux_set.h" />
+		<Unit filename="../../pocketsnes/wiz/polluxregs.h" />
+		<Unit filename="../../pocketsnes/wiz/sys_cacheflush.h" />
+		<Unit filename="../../pocketsnes/wiz/warm.cpp" />
+		<Unit filename="../../pocketsnes/wiz/warm.h" />
+		<Unit filename="../../pocketsnes/wiz/wiz_mmuhack.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../pocketsnes/wiz/wiz_sdk.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../pocketsnes/wiz/wiz_sdk.h" />
+		<Unit filename="../common/includes/crypt.h" />
+		<Unit filename="../common/includes/ioapi.h" />
+		<Unit filename="../common/includes/sal_common.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../common/includes/sal_common.h" />
+		<Unit filename="../common/includes/unzip.h" />
+		<Unit filename="../common/includes/zip.h" />
+		<Unit filename="../common/ioapi.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../common/unzip.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../common/zip.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../dingoo/includes/sal.h" />
+		<Unit filename="../dingoo/includes/sal_filesys.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../dingoo/includes/sal_sound.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../dingoo/includes/sal_timer.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../dingoo/includes/sal_video.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../dingoo/sal.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../linux/include/sal.h" />
+		<Unit filename="../linux/include/sal_filesys.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../linux/include/sal_sound.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../linux/include/sal_timer.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../linux/sal.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="Makefile.eeglobal" />
+		<Unit filename="include/sal.h" />
+		<Unit filename="include/sal_filesys.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="include/sal_sound.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="include/sal_timer.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="include/sal_video.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="interface/include/browser.h" />
+		<Unit filename="interface/include/cfg.h" />
+		<Unit filename="interface/include/gui.h" />
+		<Unit filename="interface/include/gui_skin.h" />
+		<Unit filename="interface/include/gzip.h" />
+		<Unit filename="interface/include/hdd.h" />
+		<Unit filename="interface/include/init.h" />
+		<Unit filename="interface/include/interface.h" />
+		<Unit filename="interface/include/lists.h" />
+		<Unit filename="interface/include/paths.h" />
+		<Unit filename="interface/include/settings.h" />
+		<Unit filename="interface/include/strkat.h" />
+		<Unit filename="interface/include/tar.h" />
+		<Unit filename="interface/include/video.h" />
+		<Unit filename="interface/src/browser.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="interface/src/cfg.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="interface/src/gui.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="interface/src/gzip.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="interface/src/hdd.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="interface/src/init.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="interface/src/interface.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="interface/src/lists.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="interface/src/paths.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="interface/src/settings.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="interface/src/strkat.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="interface/src/tar.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="interface/src/video.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="sal.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../test/main.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Extensions>
+			<code_completion />
+			<envvars set="ps2dev" />
+			<debugger />
+			<DoxyBlocks>
+				<comment_style block="0" line="0" />
+				<doxyfile_project />
+				<doxyfile_build />
+				<doxyfile_warnings />
+				<doxyfile_output />
+				<doxyfile_dot />
+				<general />
+			</DoxyBlocks>
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

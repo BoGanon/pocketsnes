@@ -1,0 +1,70 @@
+INTERFACE_OBJS = \
+    ../sal/ps2/interface/src/cfg.o \
+    ../sal/ps2/interface/src/gzip.o \
+    ../sal/ps2/interface/src/hdd.o \
+    ../sal/ps2/interface/src/init.o \
+    ../sal/ps2/interface/src/interface.o \
+    ../sal/ps2/interface/src/lists.o \
+    ../sal/ps2/interface/src/settings.o \
+    ../sal/ps2/interface/src/strkat.o \
+    ../sal/ps2/interface/src/tar.o \
+    ../sal/ps2/interface/src/video.o
+
+INTERFACE_INCS = \
+    -I../sal/ps2/interface/include
+
+PS2SDK_FLAGS = -UPS2LINK -fssa -fshort-double -msingle-float -mhard-float -mfused-madd -ffast-math -mno-check-zero-division -mtune=r5900 -mno-mips16
+
+EE_BIN = pocketsnes.elf
+
+SOURCE    = ./snes9x ./menu ../sal/ps2 ../sal/common
+
+SNES9X_INCS   = -I . \
+		-I ../sal/common -I ../sal/common/includes \
+		-I ./snes9x_included \
+		-I ./menu -I ./snes9x -I ./snes9x_include \
+		-I ./ps2 -I ../sal/ps2/include
+
+EE_INCS = $(INTERFACE_INCS) $(SNES9X_INCS) -I$(PS2SDK)/ports/include
+
+EE_CFLAGS = $(PS2SDK_FLAGS)
+
+EE_CXXFLAGS += $(PS2SDK_FLAGS) -fno-rtti -fno-exceptions
+
+EE_GFX_LIBS = -ldma -lpacket -lgraph -lfont -ldraw -limage
+EE_FILE_LIBS = -lfileXio
+EE_SYS_LIBS = -lSMSCDVD -laudsrv -linputx -lmc -lmtap -lpadx -lpoweroff -lpatches -lmf -lm
+
+EE_LDFLAGS = -L$(PS2SDK)/ports/lib
+EE_LIBS = $(EE_GFX_LIBS) -lconfig -lpng -lz $(EE_FILE_LIBS) $(EE_SYS_LIBS)
+
+# Find all source files
+
+SRC_CPP = $(foreach dir, $(SOURCE), $(wildcard $(dir)/*.cpp))
+SRC_C   = $(foreach dir, $(SOURCE), $(wildcard $(dir)/*.c))
+SRC_S   = $(foreach dir, $(SOURCE), $(wildcard $(dir)/*.S))
+OBJ_CPP = $(patsubst %.cpp, %.o, $(SRC_CPP))
+OBJ_C   = $(patsubst %.c, %.o, $(SRC_C))
+OBJ_S   = $(patsubst %.S, %.o, $(SRC_S))
+
+EE_OBJS     = $(OBJ_CPP) $(OBJ_C) $(OBJ_S) $(INTERFACE_OBJS) modules_tgz.o
+
+# Compile rules.
+
+.PHONY : all
+
+all : $(EE_BIN)
+
+# Clean rules
+
+# .PHONY : clean
+
+clean :
+#	@echo $(EE_OBJS) $(EE_BIN)
+	rm -f $(EE_OBJS) $(EE_BIN)
+
+%_tgz.s:
+	bin2s $*.tgz $*_tgz.s $*_tgz
+
+include ../sal/ps2/Makefile.pref
+include ../sal/ps2/Makefile.eeglobal
