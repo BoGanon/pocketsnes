@@ -4,7 +4,7 @@
  * (c) Copyright 1996 - 2001 Gary Henderson (gary.henderson@ntlworld.com) and
  *                           Jerremy Koot (jkoot@snes9x.com)
  *
- * Super FX C emulator code 
+ * Super FX C emulator code
  * (c) Copyright 1997 - 1999 Ivar (ivar@snes9x.com) and
  *                           Gary Henderson.
  * Super FX assembler emulator code (c) Copyright 1998 zsKnight and _Demo_.
@@ -705,7 +705,7 @@ void S9xEndScreenRefresh()
 	    }
 #endif
 	    IPPU.ColorsChanged = FALSE;
-		
+
 	    S9xSetPalette ();
 
 	    PPU.CGDATA[0] = saved;
@@ -873,7 +873,7 @@ void S9xSetupOBJ ()
     }
 
     int C = 0;
-    
+
     int FirstSprite = PPU.FirstSprite & 0x7f;
     int S = FirstSprite;
     do
@@ -1015,12 +1015,12 @@ void DrawOBJS (bool8_32 OnMain = FALSE, uint8 D = 0)
 	int clipcount = GFX.pCurrentClip->Count [4];
 	if (!clipcount)
 	    clipcount = 1;
-	
+
 	GFX.Z2 = (PPU.OBJ[S].Priority + 1) * 4 + D;
 
 	for (int clip = 0; clip < clipcount; clip++)
 	{
-	    int Left; 
+	    int Left;
 	    int Right;
 	    if (!GFX.pCurrentClip->Count [4])
 	    {
@@ -1045,7 +1045,7 @@ void DrawOBJS (bool8_32 OnMain = FALSE, uint8 D = 0)
 		    int TileLine;
 		    int LineCount;
 		    int Last;
-		    
+
 		    if ((StartLine = VPos + Y) < (int) GFX.StartY)
 		    {
 			StartLine = GFX.StartY - StartLine;
@@ -1082,7 +1082,7 @@ void DrawOBJS (bool8_32 OnMain = FALSE, uint8 D = 0)
 				W = Width;
 			    (*DrawClippedTilePtr) (Tile, O, Offset, W,
 						   TileLine, LineCount, &GFX);
-			    
+
 			    if (W >= Width)
 				continue;
 			    Tile += TileInc;
@@ -1128,7 +1128,7 @@ void DrawBackgroundMosaic (uint32 BGMode, uint32 bg, uint8 Z1, uint8 Z2)
     uint16 *SC2;
     uint16 *SC3;
     uint8 depths [2] = {Z1, Z2};
-    
+
     if (BGMode == 0)
 	BG.StartPalette = bg << 5;
     else
@@ -1176,13 +1176,13 @@ void DrawBackgroundMosaic (uint32 BGMode, uint32 bg, uint8 Z1, uint8 Z2)
 	    if ((VOffset != LineData [Y + Lines].BG[bg].VOffset) ||
 		(HOffset != LineData [Y + Lines].BG[bg].HOffset))
 		break;
-	
+
 	uint32 MosaicLine = VOffset + Y - MosaicOffset;
 
 	if (Y + Lines > GFX.EndY)
 	    Lines = GFX.EndY + 1 - Y;
 	uint32 VirtAlign = (MosaicLine & 7) << 3;
-	
+
 	uint16 *b1;
 	uint16 *b2;
 
@@ -1218,7 +1218,7 @@ void DrawBackgroundMosaic (uint32 BGMode, uint32 bg, uint8 Z1, uint8 Z2)
 		PixWidth = PPU.Mosaic - r;
 	    }
 	    uint32 s = Y * GFX.PPL + Left * GFX.PixSize;
-	    for (uint32 x = Left; x < Right; x += PixWidth, 
+	    for (uint32 x = Left; x < Right; x += PixWidth,
 		 s += PixWidth * GFX.PixSize,
 		 HPos += PixWidth, PixWidth = PPU.Mosaic)
 	    {
@@ -1345,7 +1345,7 @@ void DrawBackgroundOffset (uint32 BGMode, uint32 bg, uint8 Z1, uint8 Z2)
     uint32 Width;
     int VOffsetOffset = BGMode == 4 ? 0 : 32;
     uint8 depths [2] = {Z1, Z2};
-    
+
     BG.StartPalette = 0;
 
     BPS0 = (uint16 *) &Memory.VRAM[PPU.BG[2].SCBase << 1];
@@ -1364,7 +1364,7 @@ void DrawBackgroundOffset (uint32 BGMode, uint32 bg, uint8 Z1, uint8 Z2)
 	BPS3 = BPS2 + 1024;
     else
 	BPS3 = BPS2;
-    
+
     SC0 = (uint16 *) &Memory.VRAM[PPU.BG[bg].SCBase << 1];
 
     if (PPU.BG[bg].SCSize & 1)
@@ -1462,7 +1462,7 @@ void DrawBackgroundOffset (uint32 BGMode, uint32 bg, uint8 Z1, uint8 Z2)
 	    if (Left & 7)
 		MaxCount = 8 - (Left & 7);
 
-	    while (Left < Right) 
+	    while (Left < Right)
 	    {
 		if (left_hand_edge)
 		{
@@ -1509,7 +1509,7 @@ void DrawBackgroundOffset (uint32 BGMode, uint32 bg, uint8 Z1, uint8 Z2)
 			if ((HCellOffset & OffsetEnableMask))
 			    HOffset = HCellOffset;
 			else
-			    HOffset = LineData [Y].BG[bg].HOffset - 
+			    HOffset = LineData [Y].BG[bg].HOffset -
 				      Settings.StrikeGunnerOffsetHack;
 		    }
 		}
@@ -1625,7 +1625,7 @@ void DrawBackgroundMode5 (uint32 /* BGMODE */, uint32 bg, uint8 Z1, uint8 Z2)
     uint16 *SC2;
     uint16 *SC3;
     uint32 Width;
-    
+
     BG.StartPalette = 0;
 
     SC0 = (uint16 *) &Memory.VRAM[PPU.BG[bg].SCBase << 1];
@@ -1644,7 +1644,7 @@ void DrawBackgroundMode5 (uint32 /* BGMODE */, uint32 bg, uint8 Z1, uint8 Z2)
 	SC3 = SC2 + 1024;
     else
 	SC3 = SC2;
-    
+
     int Lines;
     int VOffsetMask;
     int VOffsetShift;
@@ -1667,7 +1667,7 @@ void DrawBackgroundMode5 (uint32 /* BGMODE */, uint32 bg, uint8 Z1, uint8 Z2)
 	uint32 VOffset = LineData [y].BG[bg].VOffset;
 	uint32 HOffset = LineData [y].BG[bg].HOffset;
 	int VirtAlign = (Y + VOffset) & 7;
-	
+
 	for (Lines = 1; Lines < 8 - VirtAlign; Lines++)
 	    if ((VOffset != LineData [y + Lines].BG[bg].VOffset) ||
 		(HOffset != LineData [y + Lines].BG[bg].HOffset))
@@ -1677,7 +1677,7 @@ void DrawBackgroundMode5 (uint32 /* BGMODE */, uint32 bg, uint8 Z1, uint8 Z2)
 	if (Y + Lines > endy)
 	    Lines = endy + 1 - Y;
 	VirtAlign <<= 3;
-	
+
 	int ScreenLine = (VOffset + Y) >> VOffsetShift;
 	int t1;
 	int t2;
@@ -1729,7 +1729,7 @@ void DrawBackgroundMode5 (uint32 /* BGMODE */, uint32 bg, uint8 Z1, uint8 Z2)
 
 	    uint32 Quot = HPos >> 3;
 	    uint32 Count = 0;
-	    
+
 	    uint16 *t;
 	    if (Quot > 63)
 		t = b2 + ((Quot >> 1) & 0x1f);
@@ -1976,7 +1976,7 @@ void DrawBackground (uint32 BGMode, uint32 bg, uint8 Z1, uint8 Z2)
     uint16 *SC3;
     uint32 Width;
     uint8 depths [2] = {Z1, Z2};
-    
+
     if (BGMode == 0)
 	BG.StartPalette = bg << 5;
     else
@@ -1998,7 +1998,7 @@ void DrawBackground (uint32 BGMode, uint32 bg, uint8 Z1, uint8 Z2)
 	SC3 = SC2 + 1024;
     else
 	SC3 = SC2;
-    
+
     int Lines;
     int OffsetMask;
     int OffsetShift;
@@ -2019,7 +2019,7 @@ void DrawBackground (uint32 BGMode, uint32 bg, uint8 Z1, uint8 Z2)
 	uint32 VOffset = LineData [Y].BG[bg].VOffset;
 	uint32 HOffset = LineData [Y].BG[bg].HOffset;
 	int VirtAlign = (Y + VOffset) & 7;
-	
+
 	for (Lines = 1; Lines < 8 - VirtAlign; Lines++)
 	    if ((VOffset != LineData [Y + Lines].BG[bg].VOffset) ||
 		(HOffset != LineData [Y + Lines].BG[bg].HOffset))
@@ -2029,7 +2029,7 @@ void DrawBackground (uint32 BGMode, uint32 bg, uint8 Z1, uint8 Z2)
 	    Lines = GFX.EndY + 1 - Y;
 
 	VirtAlign <<= 3;
-	
+
 	uint32 ScreenLine = (VOffset + Y) >> OffsetShift;
 	uint32 t1;
 	uint32 t2;
@@ -2081,7 +2081,7 @@ void DrawBackground (uint32 BGMode, uint32 bg, uint8 Z1, uint8 Z2)
 
 	    uint32 Quot = HPos >> 3;
 	    uint32 Count = 0;
-	    
+
 	    uint16 *t;
 	    if (BG.TileSize == 8)
 	    {
@@ -2142,7 +2142,7 @@ void DrawBackground (uint32 BGMode, uint32 bg, uint8 Z1, uint8 Z2)
 		    else
 		    {
 			// V flip only
-			(*DrawClippedTilePtr) (Tile + t2 + (Quot & 1), s, 
+			(*DrawClippedTilePtr) (Tile + t2 + (Quot & 1), s,
 					       Offset, Count, VirtAlign, Lines, &GFX);
 		    }
 		}
@@ -2184,13 +2184,13 @@ void DrawBackground (uint32 BGMode, uint32 bg, uint8 Z1, uint8 Z2)
 			if (Tile & V_FLIP)
 			{
 			    // Both horzontal & vertical flip
-			    (*DrawTilePtr) (Tile + t2 + 1 - (Quot & 1), s, 
+			    (*DrawTilePtr) (Tile + t2 + 1 - (Quot & 1), s,
 					    VirtAlign, Lines, &GFX);
 			}
 			else
 			{
 			    // Horizontal flip only
-			    (*DrawTilePtr) (Tile + t1 + 1 - (Quot & 1), s, 
+			    (*DrawTilePtr) (Tile + t1 + 1 - (Quot & 1), s,
 					    VirtAlign, Lines, &GFX);
 			}
 		    }
@@ -2242,14 +2242,14 @@ void DrawBackground (uint32 BGMode, uint32 bg, uint8 Z1, uint8 Z2)
 		GFX.Z1 = GFX.Z2 = depths [(Tile & 0x2000) >> 13];
 
 		if (BG.TileSize == 8)
-		    (*DrawClippedTilePtr) (Tile, s, 0, Count, VirtAlign, 
+		    (*DrawClippedTilePtr) (Tile, s, 0, Count, VirtAlign,
 					   Lines, &GFX);
 		else
 		{
 		    if (!(Tile & (V_FLIP | H_FLIP)))
 		    {
 			// Normal, unflipped
-			(*DrawClippedTilePtr) (Tile + t1 + (Quot & 1), s, 0, 
+			(*DrawClippedTilePtr) (Tile + t1 + (Quot & 1), s, 0,
 					       Count, VirtAlign, Lines, &GFX);
 		    }
 		    else
@@ -2259,7 +2259,7 @@ void DrawBackground (uint32 BGMode, uint32 bg, uint8 Z1, uint8 Z2)
 			{
 			    // H & V flip
 			    (*DrawClippedTilePtr) (Tile + t2 + 1 - (Quot & 1),
-						   s, 0, Count, VirtAlign, 
+						   s, 0, Count, VirtAlign,
 						   Lines, &GFX);
 			}
 			else
@@ -2274,7 +2274,7 @@ void DrawBackground (uint32 BGMode, uint32 bg, uint8 Z1, uint8 Z2)
 		    {
 			// V flip only
 			(*DrawClippedTilePtr) (Tile + t2 + (Quot & 1),
-					       s, 0, Count, VirtAlign, 
+					       s, 0, Count, VirtAlign,
 					       Lines, &GFX);
 		    }
 		}
@@ -3006,7 +3006,7 @@ void RenderScreen (uint8 *Screen, bool8_32 sub, bool8_32 force_no_add, uint8 D)
 	if (BG2)
 	{
 	    SelectTileRenderer (sub || !SUB_OR_ADD(2));
-	    DrawBackground (PPU.BGMode, 2, D + 3, 
+	    DrawBackground (PPU.BGMode, 2, D + 3,
 			    (Memory.FillRAM [0x2105] & 8) == 0 ? D + 6 : D + 17);
 	}
 	if (BG3 && PPU.BGMode == 0)
@@ -3175,7 +3175,7 @@ static void S9xDisplayFrameRate ()
     for (i = 0; i < len; i++)
     {
 	DisplayChar (Screen, string [i]);
-	Screen += Settings.SixteenBit ? (font_width - 1) * sizeof (uint16) : 
+	Screen += Settings.SixteenBit ? (font_width - 1) * sizeof (uint16) :
 		  (font_width - 1);
     }
 }
@@ -3193,7 +3193,7 @@ static void S9xDisplayString (const char *string)
     {
 	if (char_count >= max_chars || string [i] < 32)
 	{
-	    Screen -= Settings.SixteenBit ? 
+	    Screen -= Settings.SixteenBit ?
 			(font_width - 1) * sizeof (uint16) * max_chars :
 			(font_width - 1) * max_chars;
 	    Screen += font_height * GFX.Pitch;
@@ -3204,7 +3204,7 @@ static void S9xDisplayString (const char *string)
 	if (string [i] < 32)
 	    continue;
 	DisplayChar (Screen, string [i]);
-	Screen += Settings.SixteenBit ? (font_width - 1) * sizeof (uint16) : 
+	Screen += Settings.SixteenBit ? (font_width - 1) * sizeof (uint16) :
 		  (font_width - 1);
     }
 }
@@ -3225,7 +3225,7 @@ void S9xUpdateScreen () // ~30-50ms! (called from FLUSH_REDRAW())
 		 (GFX.r2131 & 0x3f) == 0;
 
     if (IPPU.OBJChanged)
-	{	
+	{
 		S9xSetupOBJ ();
 	}
 
@@ -3277,7 +3277,7 @@ void S9xUpdateScreen () // ~30-50ms! (called from FLUSH_REDRAW())
 		    // Have to back out of the speed up hack where the low res.
 		    // SNES image was rendered into a 256x239 sized buffer,
 		    // ignoring the true, larger size of the buffer.
-		    
+
 		    for (register int32 y = (int32) GFX.StartY - 1; y >= 0; y--)
 		    {
 				register uint16 *p = (uint16 *) (GFX.Screen + y * GFX.Pitch) + 255;
@@ -3402,7 +3402,7 @@ void S9xUpdateScreen () // ~30-50ms! (called from FLUSH_REDRAW())
 								*p++ = black;
 				}
 
-				
+
 				for (uint32 c = 0; c < pClip->Count [5]; c++)
 				{
 					if (pClip->Right [c][5] > pClip->Left [c][5])
@@ -3451,7 +3451,7 @@ void S9xUpdateScreen () // ~30-50ms! (called from FLUSH_REDRAW())
 					IPPU.RenderedScreenWidth);
 			}
 		}
-		
+
 	    if (IPPU.Clip [0].Count [5])
 	    {
 			// Blast, have to clear the sub-screen to the fixed-colour
@@ -3460,7 +3460,7 @@ void S9xUpdateScreen () // ~30-50ms! (called from FLUSH_REDRAW())
 			// 'underneath' to show through.
 			if (GFX.Pitch2 == (uint32)IPPU.RenderedScreenWidth)
 			{
-				memset ((GFX.SubScreen + starty * GFX.Pitch2), 
+				memset ((GFX.SubScreen + starty * GFX.Pitch2),
 						GFX.FixedColour | (GFX.FixedColour << 16),
 						GFX.Pitch2 * (endy - starty - 1));
 			}
@@ -3468,7 +3468,7 @@ void S9xUpdateScreen () // ~30-50ms! (called from FLUSH_REDRAW())
 			{
 				for (uint32 y = starty; y <= endy; y++)
 				{
-					memset ((GFX.SubScreen + y * GFX.Pitch2), 
+					memset ((GFX.SubScreen + y * GFX.Pitch2),
 							GFX.FixedColour | (GFX.FixedColour << 16),
 							IPPU.RenderedScreenWidth);
 				}
@@ -3524,7 +3524,7 @@ void S9xUpdateScreen () // ~30-50ms! (called from FLUSH_REDRAW())
 				if (IPPU.Clip [1].Right [w][5] >= IPPU.Clip [1].Left [w][5])
 				{
 				    int offset = IPPU.Clip [1].Left [w][5] * x2 * sizeof (uint16);
-				    int width = (IPPU.Clip [1].Right [w][5] - 
+				    int width = (IPPU.Clip [1].Right [w][5] -
 						 IPPU.Clip [1].Left [w][5]) * x2 * sizeof (uint16);
 				    memmove (GFX.Screen + y * GFX.Pitch2 + offset,
 					     GFX.SubScreen + y * GFX.Pitch2 + offset,
@@ -3568,7 +3568,7 @@ void S9xUpdateScreen () // ~30-50ms! (called from FLUSH_REDRAW())
 
                         while (p < q)
                             *p++ = black;
-                    }		    
+                    }
 #endif
 		}
 	    }
@@ -3709,7 +3709,7 @@ void S9xUpdateScreen () // ~30-50ms! (called from FLUSH_REDRAW())
 				    {
 					if (*s != 1)
 					    *p = COLOR_ADD (back, *(p + GFX.Delta));
-					else	
+					else
 					    *p = back_fixed;
 				    }
 				    else
@@ -3741,7 +3741,7 @@ void S9xUpdateScreen () // ~30-50ms! (called from FLUSH_REDRAW())
 						{
 							if (*s != 1)
 								*p = *(p + GFX.Delta);
-							else	
+							else
 								*p = GFX.FixedColour;
 						}
 						else
@@ -3808,13 +3808,13 @@ void S9xUpdateScreen () // ~30-50ms! (called from FLUSH_REDRAW())
 				}
 			}
 	    }
-	}	
+	}
 	else
 	{
 	    // 16bit and transparency but currently no transparency effects in
 	    // operation.
 
-	    uint32 back = IPPU.ScreenColors [0] | 
+	    uint32 back = IPPU.ScreenColors [0] |
 			 (IPPU.ScreenColors [0] << 16);
 
 	    if (PPU.ForcedBlanking)
@@ -4070,11 +4070,11 @@ else \
 #endif
 		    {
 			if (!Settings.Mode7Interpolate)
-			{	
+			{
 			    DrawBGMode7Background16 (GFX.Screen, bg);
 			}
 			else
-			{	
+			{
 			    DrawBGMode7Background16_i (GFX.Screen, bg);
 			}
 		  }

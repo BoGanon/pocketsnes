@@ -284,7 +284,7 @@ void DSPOp10()
                         Op10Temp=Op10Temp/2.0;
                         Op10ExponentR++;
                 }
-        Op10CoefficientR = (short)(Op10Temp*32768.0f);
+        Op10CoefficientR = (short)(Op10Temp*32768);
 	#ifdef DebugDSP1
         Log_Message("OP10 INV %d*2^%d = %d*2^%d", Op10Coefficient, Op10Exponent, Op10CoefficientR, Op10ExponentR);
 	#endif
